@@ -84,12 +84,20 @@ const network = (() => {
     fm1.append('feMergeNode').attr('in', 'SourceGraphic');
 
     // Main group centred.
-    g = svg.append('g').attr('transform', `translate(${width / 2},${height / 2})`);
+    g = svg.append('g');
 
     linesG     = g.append('g').attr('class', 'net-lines');
     marketG    = g.append('g').attr('class', 'net-market');
     cardsG     = g.append('g').attr('class', 'net-cards');
     particlesG = g.append('g').attr('class', 'net-particles');
+
+    // Pinch-to-zoom and pan — works on mobile and desktop.
+    const zoom = d3.zoom()
+      .scaleExtent([0.25, 4])
+      .on('zoom', (event) => { g.attr('transform', event.transform); });
+    svg.call(zoom);
+    // Initialise at centred position matching the original layout.
+    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
 
     _drawClusterLabels();
     _drawLines();

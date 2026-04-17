@@ -128,7 +128,7 @@ const app = (() => {
 
   const _TAB_COMMS = {
     'tab-profiles': [
-      'Profiles tab — generate AI-powered investor personas.',
+      'Profiles tab — generate LLM-calibrated investor profiles.',
       'Set your scenario name and description first, then generate profiles. The model uses your scenario context — including any shocks you define — to create realistic personas for each investor type.',
     ],
     'tab-market': [
@@ -511,7 +511,7 @@ const app = (() => {
       case 'batch_processing':
         _setComms('loading', data.message || 'Processing…',
           data.message?.includes('analysis')
-            ? 'AI is reading the simulation data and writing the investment briefing — this takes 1–3 minutes.'
+            ? 'Generating investment narrative from simulation output — this takes 1–3 minutes.'
             : 'Aggregating results across all runs.');
         break;
 
