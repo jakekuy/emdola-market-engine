@@ -1737,7 +1737,7 @@ body.landing-mode #top-nav { display: none; }
   .ticker-item { min-width: 56px; flex-shrink: 0; }
 
   /* Runtime — network and chart sized for mobile */
-  #network-container { min-height: 0; height: 320px; flex: none; width: 100%; overflow: hidden; }
+  #network-container { min-height: 0; height: 320px; flex: none; width: 100vw; max-width: 100vw; overflow: hidden; }
   #network-svg { display: block; width: 100%; height: 100%; overflow: hidden; }
   .network-legend { font-size: 11px; padding: 8px 12px; }
   .live-chart-section { flex: none; height: 220px; min-height: 0; }
