@@ -91,20 +91,25 @@ const network = (() => {
     cardsG     = g.append('g').attr('class', 'net-cards');
     particlesG = g.append('g').attr('class', 'net-particles');
 
-    // Pinch-to-zoom / pan on desktop; single-finger touch always scrolls the page.
+    // Pinch-to-zoom and pan — works on mobile and desktop.
+    // Touch in the outer 25% of the container passes through to page scroll.
     const zoom = d3.zoom()
       .scaleExtent([0.25, 4])
-      .filter(event => {
+      .filter(function(event) {
         if (event.type === 'touchstart' || event.type === 'touchmove') {
-          return event.touches.length >= 2;
+          const rect = svg.node().getBoundingClientRect();
+          const t = event.touches[0];
+          if (!t) return false;
+          const rx = (t.clientX - rect.left) / rect.width;
+          const ry = (t.clientY - rect.top) / rect.height;
+          if (rx < 0.25 || rx > 0.75 || ry < 0.25 || ry > 0.75) return false;
         }
         return !event.ctrlKey && !event.button;
       })
       .on('zoom', (event) => { g.attr('transform', event.transform); });
     svg.call(zoom);
-    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
-    // Override D3's touch-action:none so vertical page scroll always works.
     svg.node().style.touchAction = 'pan-y';
+    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
 
     _drawClusterLabels();
     _drawLines();
