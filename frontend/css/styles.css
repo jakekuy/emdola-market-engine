@@ -806,11 +806,12 @@ h3::before {
 
 /* Column identity labels */
 .output-col-label {
+  border-bottom: 1px solid var(--bg-3);
   color: var(--text-2);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  margin-bottom: 8px;
+  padding: 8px 28px;
   text-transform: uppercase;
 }
 /* Inline sub-label on chart-title */
