@@ -1597,6 +1597,32 @@ body.landing-mode #top-nav { display: none; }
 /* ── Mobile responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
 
+  /* Root scroll — unlock body so all views can scroll vertically */
+  html, body {
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* Views expand to natural height on mobile */
+  #view-landing,
+  #view-setup,
+  #view-output,
+  #view-profiles { height: auto; overflow: visible; }
+
+  /* Runtime: fixed-height but vertically scrollable */
+  #view-runtime { height: 100vh; overflow-y: auto; overflow-x: hidden; }
+
+  /* Prevent any column from overflowing viewport width */
+  .output-two-col,
+  .output-col-left,
+  .output-col-right,
+  .output-body { max-width: 100vw; overflow-x: hidden; }
+
+  /* Hide sanity badges in header — full detail is in Model Evidence column */
+  #out-sanity-badges { display: none; }
+
   /* Base */
   body { font-size: 13px; }
 
