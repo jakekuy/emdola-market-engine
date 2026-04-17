@@ -93,8 +93,6 @@ const network = (() => {
 
     // Pinch-to-zoom and pan — desktop only.
     // On mobile the SVG is non-interactive so single-finger scroll reaches the page.
-    // Pinch-to-zoom and pan — desktop only.
-    // On mobile the SVG is non-interactive so single-finger scroll reaches the page.
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
     if (isMobile) {
       g.attr('transform', `translate(${width / 2}, ${height / 2})`);
@@ -106,8 +104,6 @@ const network = (() => {
       svg.call(zoom);
       svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
     }
-    // Initialise at centred position matching the original layout.
-    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
 
     _drawClusterLabels();
     _drawLines();
