@@ -1681,6 +1681,11 @@ body.landing-mode #top-nav { display: none; }
   }
   .mobile-col-nav a:hover { color: var(--text-0); border-color: var(--text-2); }
 
+  /* Spaghetti chart — move sector selector below chart on mobile */
+  .output-col-chart { display: flex; flex-direction: column; }
+  #chart-sector-selector { order: 3; margin-bottom: 0; margin-top: 8px; }
+  #chart-spaghetti { order: 2; }
+
   /* Results — stack columns */
   .output-two-col { grid-template-columns: 1fr; }
   .output-col-left { border-right: none; border-bottom: 1px solid var(--bg-3); }

@@ -127,9 +127,15 @@ const charts = (() => {
       });
     }
 
-    // P10–P90 band (not shown for market average).
-    const p10 = sector === 'Mkt' ? [] : (stats.p10_prices[sectorFullName] || []);
-    const p90 = sector === 'Mkt' ? [] : (stats.p90_prices[sectorFullName] || []);
+    // P10–P90 band.
+    const p10 = sector === 'Mkt'
+      ? (stats.p10_prices[SECTOR_FULLNAMES[0]] || []).map((_, i) =>
+          SECTOR_FULLNAMES.reduce((sum, fn) => sum + (stats.p10_prices[fn]?.[i] ?? 100), 0) / SECTOR_FULLNAMES.length)
+      : (stats.p10_prices[sectorFullName] || []);
+    const p90 = sector === 'Mkt'
+      ? (stats.p90_prices[SECTOR_FULLNAMES[0]] || []).map((_, i) =>
+          SECTOR_FULLNAMES.reduce((sum, fn) => sum + (stats.p90_prices[fn]?.[i] ?? 100), 0) / SECTOR_FULLNAMES.length)
+      : (stats.p90_prices[sectorFullName] || []);
     if (p10.length > 0 && p90.length > 0) {
       traces.push({
         x: [...ticks, ...ticks.slice().reverse()],
@@ -137,7 +143,7 @@ const charts = (() => {
         type: 'scatter',
         fill: 'toself',
         fillcolor: 'rgba(212,168,14,0.15)',
-        line: { color: 'transparent' },
+        line: { color: 'rgba(0,0,0,0)', width: 0 },
         showlegend: true,
         hoverinfo: 'skip',
         name: 'P10–P90 range',
