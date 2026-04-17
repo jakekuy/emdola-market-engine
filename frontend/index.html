@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EMDOLA — Market Simulation</title>
-  <link rel="stylesheet" href="/static/css/styles.css?v=52" />
+  <link rel="stylesheet" href="/static/css/styles.css?v=53" />
   <!-- D3.js v7 -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <!-- Plotly.js -->
@@ -301,6 +301,9 @@
 
 <!-- ── Runtime view ────────────────────────────────────────────────────────── -->
 <div id="view-runtime" class="view">
+  <div class="mobile-runtime-note" style="display:none">
+    <span>⬛</span> The live view is best experienced on desktop — all results are available on the Results page.
+  </div>
   <div class="runtime-layout">
 
     <!-- Three-column row: sidebar / network / agent cards -->
@@ -371,10 +374,17 @@
     </header>
 
     <div class="output-body">
+
+      <!-- Mobile column jump nav — hidden on desktop via CSS -->
+      <div class="mobile-col-nav" style="display:none">
+        <a href="#output-implications">Investment Implications ↓</a>
+        <a href="#output-evidence">Model Evidence ↓</a>
+      </div>
+
       <div class="output-two-col">
 
         <!-- ── LEFT: Investment implications ── -->
-        <div class="output-col-left">
+        <div class="output-col-left" id="output-implications">
           <div class="output-col-label">INVESTMENT IMPLICATIONS</div>
 
           <!-- Investment Thesis -->
@@ -399,7 +409,7 @@
         </div>
 
         <!-- ── RIGHT: Model evidence ── -->
-        <div class="output-col-right">
+        <div class="output-col-right" id="output-evidence">
           <div class="output-col-label">MODEL EVIDENCE</div>
 
           <!-- Model Signal -->
