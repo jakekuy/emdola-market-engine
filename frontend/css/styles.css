@@ -1597,11 +1597,11 @@ body.landing-mode #top-nav { display: none; }
 /* ── Mobile responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
 
-  /* Root scroll — unlock body so all views can scroll vertically */
+  /* Root scroll — unlock body so all views can scroll */
   html, body {
     height: auto;
     min-height: 100vh;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
   }
 
@@ -1611,8 +1611,8 @@ body.landing-mode #top-nav { display: none; }
   #view-output,
   #view-profiles { height: auto; overflow: visible; }
 
-  /* Runtime: vertical scroll only — no horizontal bleed */
-  #view-runtime { height: auto; min-height: 100vh; overflow-x: hidden; overflow-y: auto; max-width: 100vw; }
+  /* Runtime: full scroll in both axes */
+  #view-runtime { height: auto; min-height: 100vh; overflow-x: auto; overflow-y: auto; }
 
   /* Prevent any column from overflowing viewport width */
   .output-two-col,
