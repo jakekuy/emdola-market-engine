@@ -97,7 +97,6 @@ const network = (() => {
       .scaleExtent([0.25, 4])
       .filter(function(event) {
         if (event.type === 'touchstart' || event.type === 'touchmove') {
-          if (event.touches.length >= 2) return true; // always allow pinch-zoom
           const rect = svg.node().getBoundingClientRect();
           const t = event.touches[0];
           if (!t) return false;
