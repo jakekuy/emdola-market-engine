@@ -91,11 +91,21 @@ const network = (() => {
     cardsG     = g.append('g').attr('class', 'net-cards');
     particlesG = g.append('g').attr('class', 'net-particles');
 
-    // Pinch-to-zoom and pan — works on mobile and desktop.
-    const zoom = d3.zoom()
-      .scaleExtent([0.25, 4])
-      .on('zoom', (event) => { g.attr('transform', event.transform); });
-    svg.call(zoom);
+    // Pinch-to-zoom and pan — desktop only.
+    // On mobile the SVG is non-interactive so single-finger scroll reaches the page.
+    // Pinch-to-zoom and pan — desktop only.
+    // On mobile the SVG is non-interactive so single-finger scroll reaches the page.
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile) {
+      g.attr('transform', `translate(${width / 2}, ${height / 2})`);
+      svg.node().style.pointerEvents = 'none';
+    } else {
+      const zoom = d3.zoom()
+        .scaleExtent([0.25, 4])
+        .on('zoom', (event) => { g.attr('transform', event.transform); });
+      svg.call(zoom);
+      svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
+    }
     // Initialise at centred position matching the original layout.
     svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
 

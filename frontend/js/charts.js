@@ -154,8 +154,9 @@ const charts = (() => {
         x: [...ticks, ...ticks.slice().reverse()],
         y: [...p90, ...p10.slice().reverse()],
         type: 'scatter',
+        mode: 'none',
         fill: 'toself',
-        fillcolor: 'rgba(212,168,14,0.25)',
+        fillcolor: 'rgba(212,168,14,0.35)',
         line: { color: 'rgba(0,0,0,0)', width: 0 },
         showlegend: true,
         hoverinfo: 'skip',
@@ -178,10 +179,10 @@ const charts = (() => {
 
     const layout = {
       ...PLOTLY_LAYOUT_BASE,
-      margin: { ...PLOTLY_LAYOUT_BASE.margin, b: 70 },
+      margin: { ...PLOTLY_LAYOUT_BASE.margin, b: 85 },
       yaxis: { ...PLOTLY_LAYOUT_BASE.yaxis, title: 'Index (base 100)' },
       xaxis: { ...PLOTLY_LAYOUT_BASE.xaxis, title: 'Day' },
-      legend: { orientation: 'h', x: 0, y: -0.22, font: { color: '#807c76', size: 11 }, bgcolor: 'transparent' },
+      legend: { orientation: 'h', x: 0, y: -0.30, font: { color: '#807c76', size: 11 }, bgcolor: 'transparent' },
       hovermode: 'closest',
       height: 280,
     };
