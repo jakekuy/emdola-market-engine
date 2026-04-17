@@ -527,13 +527,6 @@ const setup = (() => {
     }
     const shocksDefaultsText = document.getElementById('shocks-defaults-text');
     if (shocksDefaultsText) shocksDefaultsText.textContent = `${p.shocks.length} shock${p.shocks.length !== 1 ? 's' : ''} configured for this scenario.`;
-    const shocksDetail = document.getElementById('shocks-detail');
-    const shocksBtn = document.querySelector('[onclick*="shocks-detail"]');
-    if (shocksDetail && shocksDetail.style.display === 'none') {
-      shocksDetail.style.display = 'block';
-      if (shocksBtn) shocksBtn.textContent = 'Close ▴';
-    }
-
     // Shocks tab — clear existing, add preset shocks
     document.querySelectorAll('.shock-card[id^="shock-card-"]').forEach(c => c.remove());
     shockCount = 0;
