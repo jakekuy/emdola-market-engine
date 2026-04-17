@@ -272,6 +272,7 @@ const app = (() => {
   function _setView(id) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(id)?.classList.add('active');
+    window.scrollTo(0, 0);
   }
 
   // ── Use saved profiles (no LLM call) ─────────────────────────────────────────
