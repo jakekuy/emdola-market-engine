@@ -1632,7 +1632,9 @@ body.landing-mode #top-nav { display: none; }
   .tagline { display: none; }
 
   /* Landing */
-  .landing-body { padding: 24px 16px; }
+  .landing-container { padding: 32px 16px 32px; }
+  .landing-logo { font-size: 52px; letter-spacing: 0.08em; }
+  .landing-hero { margin-bottom: 36px; }
   .landing-steps { grid-template-columns: 1fr; gap: 12px; }
   .landing-key-phrase { white-space: normal; }
 
