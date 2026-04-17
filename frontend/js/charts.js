@@ -128,13 +128,26 @@ const charts = (() => {
     }
 
     // P10–P90 band.
+    // For Mkt: compute per-tick percentile of per-run market averages (not average of sector percentiles).
+    const mktRunAvgs = sector === 'Mkt'
+      ? result.run_results.map(run =>
+          run.tick_snapshots.map(snap => {
+            const vals = snap.prices.filter(p => p != null);
+            return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+          })
+        )
+      : null;
     const p10 = sector === 'Mkt'
-      ? (stats.p10_prices[SECTOR_FULLNAMES[0]] || []).map((_, i) =>
-          SECTOR_FULLNAMES.reduce((sum, fn) => sum + (stats.p10_prices[fn]?.[i] ?? 100), 0) / SECTOR_FULLNAMES.length)
+      ? ticks.map((_, ti) => {
+          const vals = mktRunAvgs.map(r => r[ti]).filter(v => v != null).sort((a, b) => a - b);
+          return vals.length ? vals[Math.floor(vals.length * 0.1)] : 100;
+        })
       : (stats.p10_prices[sectorFullName] || []);
     const p90 = sector === 'Mkt'
-      ? (stats.p90_prices[SECTOR_FULLNAMES[0]] || []).map((_, i) =>
-          SECTOR_FULLNAMES.reduce((sum, fn) => sum + (stats.p90_prices[fn]?.[i] ?? 100), 0) / SECTOR_FULLNAMES.length)
+      ? ticks.map((_, ti) => {
+          const vals = mktRunAvgs.map(r => r[ti]).filter(v => v != null).sort((a, b) => a - b);
+          return vals.length ? vals[Math.floor(vals.length * 0.9)] : 100;
+        })
       : (stats.p90_prices[sectorFullName] || []);
     if (p10.length > 0 && p90.length > 0) {
       traces.push({
@@ -142,7 +155,7 @@ const charts = (() => {
         y: [...p90, ...p10.slice().reverse()],
         type: 'scatter',
         fill: 'toself',
-        fillcolor: 'rgba(212,168,14,0.15)',
+        fillcolor: 'rgba(212,168,14,0.25)',
         line: { color: 'rgba(0,0,0,0)', width: 0 },
         showlegend: true,
         hoverinfo: 'skip',
@@ -165,9 +178,10 @@ const charts = (() => {
 
     const layout = {
       ...PLOTLY_LAYOUT_BASE,
+      margin: { ...PLOTLY_LAYOUT_BASE.margin, b: 70 },
       yaxis: { ...PLOTLY_LAYOUT_BASE.yaxis, title: 'Index (base 100)' },
       xaxis: { ...PLOTLY_LAYOUT_BASE.xaxis, title: 'Day' },
-      legend: { font: { color: '#807c76', size: 11 }, bgcolor: 'transparent' },
+      legend: { orientation: 'h', x: 0, y: -0.22, font: { color: '#807c76', size: 11 }, bgcolor: 'transparent' },
       hovermode: 'closest',
       height: 280,
     };
