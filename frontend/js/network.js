@@ -91,19 +91,20 @@ const network = (() => {
     cardsG     = g.append('g').attr('class', 'net-cards');
     particlesG = g.append('g').attr('class', 'net-particles');
 
-    // Pinch-to-zoom and pan — desktop only.
-    // On mobile the SVG is non-interactive so single-finger scroll reaches the page.
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    if (isMobile) {
-      g.attr('transform', `translate(${width / 2}, ${height / 2})`);
-      svg.node().style.pointerEvents = 'none';
-    } else {
-      const zoom = d3.zoom()
-        .scaleExtent([0.25, 4])
-        .on('zoom', (event) => { g.attr('transform', event.transform); });
-      svg.call(zoom);
-      svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
-    }
+    // Pinch-to-zoom / pan on desktop; single-finger touch always scrolls the page.
+    const zoom = d3.zoom()
+      .scaleExtent([0.25, 4])
+      .filter(event => {
+        if (event.type === 'touchstart' || event.type === 'touchmove') {
+          return event.touches.length >= 2;
+        }
+        return !event.ctrlKey && !event.button;
+      })
+      .on('zoom', (event) => { g.attr('transform', event.transform); });
+    svg.call(zoom);
+    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
+    // Override D3's touch-action:none so vertical page scroll always works.
+    svg.node().style.touchAction = 'pan-y';
 
     _drawClusterLabels();
     _drawLines();
