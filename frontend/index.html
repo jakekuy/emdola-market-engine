@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMDOLA — Market Simulation</title>
+  <link rel="stylesheet" href="/static/css/styles.css?v=50" />
+  <!-- D3.js v7 -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<!-- ── Landing page ────────────────────────────────────────────────────────── -->
+<div id="view-landing" class="view active">
+  <div class="landing-container">
+
+    <div class="landing-hero">
+      <span class="landing-logo">EMDOLA</span>
+      <div class="landing-engine-label">Market Engine</div>
+      <div class="landing-fullname">Emergent Market Dynamics of LLM-Calibrated Agents</div>
+      <p class="landing-why">An agent-based model simulating distinct retail and institutional investors interacting in response to a market shock or structural trend. Where their collective behaviour systematically pushes prices away from consensus produces <strong>actionable mispricing signals</strong>.</p>
+    </div>
+
+    <div class="landing-steps">
+
+      <div class="landing-step step-setup">
+        <div class="step-num">SETUP</div>
+        <h2 class="step-title">Configure your scenario</h2>
+        <div class="step-setup-list">
+          <div class="step-sub"><span class="step-sub-num">01</span><span>Scenario — define the shock or structural trend and the market context</span></div>
+          <div class="step-sub"><span class="step-sub-num">02</span><span>Market — set price sensitivity by sector and the strength of news and sentiment signals</span></div>
+          <div class="step-sub"><span class="step-sub-num">03</span><span>Shocks — configure the events or structural trends driving agent responses</span></div>
+          <div class="step-sub"><span class="step-sub-num">04</span><span>Agents — optionally adjust the investor mix and capital weights</span></div>
+          <div class="step-sub"><span class="step-sub-num">05</span><span>Run — set simulation scale and launch</span></div>
+        </div>
+      </div>
+
+      <div class="landing-step step-live">
+        <div class="step-num">LIVE VIEW</div>
+        <h2 class="step-title">Watch the simulation run</h2>
+        <p class="step-desc">Watch agent interactions unfold in real time — trading activity, the investor network, and live price trajectories across all runs.</p>
+      </div>
+
+      <div class="landing-step step-results">
+        <div class="step-num">RESULTS</div>
+        <h2 class="step-title">Aggregate findings</h2>
+        <p class="step-desc">Sector mispricing distributions across all Monte Carlo runs, signal consistency by sector, and a model-generated <span class="landing-key-phrase">actionable investment thesis</span> that emerges from the interactions of these investors with the market.</p>
+      </div>
+
+    </div>
+
+    <div class="landing-cta">
+      <button class="btn-primary landing-btn" onclick="app.enterSetup()">Begin →</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ── Persistent top nav ──────────────────────────────────────────────────── -->
+<nav id="top-nav" class="top-nav">
+  <button class="top-nav-logo" onclick="app.showLanding()">EMDOLA</button>
+  <span class="nav-sep">›</span>
+  <button id="nav-setup" class="nav-step active" onclick="app.showSetup()"><i data-lucide="settings-2"></i>Setup</button>
+  <span class="nav-arrow">›</span>
+  <button id="nav-runtime" class="nav-step" onclick="app.showRuntime()" disabled><i data-lucide="activity"></i>Live view</button>
+  <span class="nav-arrow">›</span>
+  <button id="nav-output" class="nav-step" onclick="app.showOutput()" disabled><i data-lucide="bar-chart-2"></i>Results</button>
+</nav>
+
+<!-- ── Persistent comms bar ────────────────────────────────────────────────── -->
+<div id="comms-bar" class="comms-bar info">
+  <div id="comms-spinner" class="comms-spinner" style="display:none"></div>
+  <div id="comms-icon" class="comms-icon">●</div>
+  <div class="comms-content">
+    <div id="comms-message" class="comms-message">Configure your scenario, generate agent profiles, then run the simulation.</div>
+    <div id="comms-sub" class="comms-sub"></div>
+  </div>
+</div>
+
+<!-- ── Setup view ──────────────────────────────────────────────────────────── -->
+<div id="view-setup" class="view">
+  <div class="setup-container">
+    <div id="setup-locked-banner" class="setup-locked-banner" style="display:none">
+      Simulation in progress — settings are read-only.
+      <a href="#" onclick="app.showRuntime(); return false;">View live simulation →</a>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="tab-profiles"><i data-lucide="users"></i>Scenarios &amp; Personas</button>
+      <button class="tab-btn" data-tab="tab-market"><i data-lucide="bar-chart-2"></i>Market</button>
+      <button class="tab-btn" data-tab="tab-shocks"><i data-lucide="zap"></i>Shocks</button>
+      <button class="tab-btn" data-tab="tab-agents"><i data-lucide="sliders-horizontal"></i>Agents</button>
+      <button class="tab-btn" data-tab="tab-run"><i data-lucide="play"></i>Run</button>
+    </div>
+
+    <!-- Tab 1: Agent profiles -->
+    <div id="tab-profiles" class="tab-panel active">
+      <div class="tab-intro">
+        <div class="tab-intro-icon"><i data-lucide="users"></i></div>
+        <div>
+          <div class="tab-intro-title">Scenarios &amp; Personas</div>
+          <div class="tab-intro-desc">A large language model generates 3 distinct investor personas for each of the 8 investor types. Your scenario name, description, and any shocks you define are passed as context — configure those tabs first for more scenario-relevant profiles.</div>
+        </div>
+      </div>
+
+      <p class="tab-intro-desc" style="margin: -8px 0 12px; padding: 10px 14px; background: var(--bg-1); border-left: 2px solid var(--bg-3); border-radius: 0 4px 4px 0;">
+        The model outputs <strong style="color:var(--text-0)">relative mispricing signals</strong> — where agent behaviour collectively pushes sector prices above or below a neutral consensus baseline. This is not a price forecast; consistent directional signals across runs are investment theses to investigate.
+      </p>
+
+      <div class="preset-bar">
+        <span class="preset-label">Presets</span>
+        <button class="btn-preset" onclick="setup.loadPreset('iran_energy')">Iran — Strait of Hormuz</button>
+        <button class="btn-preset" onclick="setup.loadPreset('russia_ukraine')">Russia–Ukraine 2022</button>
+        <button class="btn-preset" onclick="setup.loadPreset('oil_crash_2016')">Oil crash 2015–16</button>
+        <button class="btn-preset" onclick="setup.loadPreset('carbon_price')">Carbon price shock</button>
+        <button class="btn-preset" onclick="setup.loadPreset('asia_heatwave')">Manufacturing heatwave</button>
+        <button class="btn-preset-clear" onclick="setup.clearPreset()">Clear</button>
+      </div>
+
+      <div class="field-group">
+        <label>Scenario name</label>
+        <input id="scenario-name" type="text" placeholder="e.g. Iran — Strait of Hormuz" />
+      </div>
+      <div class="field-group">
+        <label>Market environment <span class="hint">Optional — describe the macro regime before the shock (e.g. elevated inflation, rising rates). Passed to the model when generating investor profiles.</span></label>
+        <textarea id="market-context" rows="2" placeholder="e.g. elevated inflation, rising rates, post-pandemic recovery, high retail participation."></textarea>
+      </div>
+      <div class="field-group">
+        <label>Scenario description <span class="hint">Describe the shock or event being studied — included in the post-run investment analysis.</span></label>
+        <textarea id="scenario-desc" rows="2" placeholder="e.g. Iran closes the Strait of Hormuz, disrupting 20% of global oil supply."></textarea>
+      </div>
+      <p class="tab-intro-desc" style="margin: 0 0 20px; padding: 10px 14px; background: var(--bg-1); border-left: 2px solid var(--bg-3); border-radius: 0 4px 4px 0; font-size: 12px; color: var(--text-2);">Agents cannot short-sell — bearish pressure is bounded by existing holdings. The model reflects long-only investor behaviour.</p>
+
+      <div id="personas-footer" class="setup-footer" style="margin-bottom:24px">
+        <!-- Populated by app.js once saved-profiles check completes -->
+      </div>
+
+      <div id="profiles-type-grid" class="profiles-type-grid">
+        <p class="hint profiles-empty-hint">Select a preset above, or generate profiles for your own scenario using the button below.</p>
+      </div>
+    </div>
+
+    <!-- Tab 2: Market environment -->
+    <div id="tab-market" class="tab-panel">
+      <div class="tab-intro">
+        <div class="tab-intro-icon"><i data-lucide="bar-chart-2"></i></div>
+        <div>
+          <div class="tab-intro-title">Market environment</div>
+          <div class="tab-intro-desc">Controls price sensitivity by sector and the strength of news and sentiment signals. Presets set these automatically — defaults work for most scenarios.</div>
+        </div>
+      </div>
+      <div class="defaults-bar">
+        <span class="defaults-bar-text">Using defaults — no changes needed to run.</span>
+        <button class="btn-secondary defaults-toggle-btn" onclick="app.toggleCalibration('market-detail', this)">Customise ▾</button>
+      </div>
+      <div id="market-detail" class="calibration-detail" style="display:none">
+        <h3>Price sensitivity per sector</h3>
+        <p class="hint">How strongly sector prices respond to buying and selling pressure. Higher values mean prices move more sharply for a given order imbalance. Defaults reflect real-world liquidity differences across sectors.</p>
+        <div id="lambda-grid" class="lambda-grid"></div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Strength of news &amp; sentiment signals</label>
+            <input id="nm-intensity" type="number" min="0" max="1" step="0.05" value="0.4" />
+            <span class="hint">How strongly non-price signals — news, social media, analyst commentary — broadcast into the market and influence agent behaviour. Scale 0–1.</span>
+          </div>
+          <div class="field-group">
+            <label>Narrative half-life — how long the shock narrative lasts (trading days)</label>
+            <input id="narrative-half-life" type="number" min="1" max="60" step="1" value="10" />
+            <span class="hint">How quickly the shock narrative decays. After this many days, herding intensity halves — agents diverge and two-sided flow resumes. Shorter for sharp one-off events (5); longer for sustained macro narratives (20–30).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Shocks -->
+    <div id="tab-shocks" class="tab-panel">
+      <div class="tab-intro">
+        <div class="tab-intro-icon"><i data-lucide="zap"></i></div>
+        <div>
+          <div class="tab-intro-title">Shocks &amp; events</div>
+          <div class="tab-intro-desc">Add events or structural trends that push prices and trigger agent responses.</div>
+        </div>
+      </div>
+      <div class="defaults-bar">
+        <span id="shocks-defaults-text" class="defaults-bar-text">No shocks configured — select a preset or add shocks manually.</span>
+        <button class="btn-secondary defaults-toggle-btn" onclick="app.toggleCalibration('shocks-detail', this)">Configure ▾</button>
+      </div>
+      <div id="shocks-detail" class="calibration-detail" style="display:none">
+        <div id="preset-shock-banner" style="display:none; margin-bottom:16px; padding:10px 14px; background:var(--bg-1); border-left:2px solid var(--gold); border-radius:0 4px 4px 0; font-size:12px; color:var(--text-2);"></div>
+        <p style="margin: 0 0 16px; padding: 10px 14px; background: var(--bg-1); border-left: 2px solid #c0392b; border-radius: 0 4px 4px 0; font-size: 12px; color: var(--text-2);">
+          <strong style="color:var(--text-1)">Scope note:</strong> Designed for shocks that originate outside the financial system — supply disruptions, geopolitical crises, commodity shocks, physical climate events, trade policy changes, etc. <strong style="color:var(--text-1)">Not suited</strong> for scenarios driven primarily by financial system mechanics — yield curve dynamics, rate policy, credit spread contagion, etc.
+        </p>
+        <div id="shock-list"></div>
+        <button id="add-shock-btn" class="btn-secondary">+ Add shock</button>
+      </div>
+    </div>
+
+    <!-- Tab 4: Agents -->
+    <div id="tab-agents" class="tab-panel">
+      <div class="tab-intro">
+        <div class="tab-intro-icon"><i data-lucide="sliders-horizontal"></i></div>
+        <div>
+          <div class="tab-intro-title">Investor mix</div>
+          <div class="tab-intro-desc">Controls the number of agents and capital weight for each investor type. Defaults are calibrated to realistic relative market weights.</div>
+        </div>
+      </div>
+      <div class="defaults-bar">
+        <span class="defaults-bar-text">Using defaults — no changes needed to run.</span>
+        <button class="btn-secondary defaults-toggle-btn" onclick="app.toggleCalibration('agents-detail', this)">Customise ▾</button>
+      </div>
+      <div id="agents-detail" class="calibration-detail" style="display:none">
+        <p class="hint">Adjust the number of agents or capital base for each investor type. Leave blank to use defaults (30 agents per type). Over- or under-weighting a type shifts the population composition and will affect which dynamics dominate.</p>
+        <div id="agent-override-grid"></div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Run configuration -->
+    <div id="tab-run" class="tab-panel">
+      <div class="tab-intro">
+        <div class="tab-intro-icon"><i data-lucide="play"></i></div>
+        <div>
+          <div class="tab-intro-title">Run configuration</div>
+          <div class="tab-intro-desc">Set the simulation duration and number of runs.<span id="run-tab-profiles-warning" style="display:none"> <span style="color:var(--red)">Agent profiles not loaded —</span> <a href="#" onclick="app.showSetup();document.querySelector('[data-tab=\'tab-profiles\']').click();return false;" style="color:var(--accent)">return to Scenarios &amp; Personas.</a></span></div>
+        </div>
+      </div>
+      <div id="run-summary" class="run-summary"></div>
+      <div class="notice-block notice-info">
+        Without a shock configured in the Shocks tab, prices will stay near 100 — the model is mean-reverting by design. For visible price dynamics, add at least one shock with the market channel enabled.
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Duration <span class="hint">(1 unit ≈ 1 trading day)</span></label>
+          <input id="total-ticks" type="number" min="10" step="10" value="250" />
+        </div>
+        <div class="field-group">
+          <label>Number of runs</label>
+          <input id="num-runs" type="number" min="1" max="10000" value="10" />
+          <span class="hint">Each run uses a different combination of agent profiles. More runs = more robust results — but each run takes compute time. <strong>Start with 10 runs to check your setup</strong> before committing to 100+.</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Run variation</label>
+          <select id="seed-policy" onchange="setup.onSeedPolicyChange()">
+            <option value="random" selected>Different each time (recommended)</option>
+            <option value="fixed">Fixed seed (reproducible results)</option>
+          </select>
+        </div>
+        <div class="field-group" id="fixed-seed-group" style="display:none">
+          <label>Fixed seed value</label>
+          <input id="fixed-seed" type="number" value="42" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group checkbox-field">
+          <label class="checkbox-label">
+            <input id="fast-mode" type="checkbox" />
+            <span>Fast mode — skip live view and run to completion in background</span>
+          </label>
+          <span class="hint">The live view shows agent interactions and price trajectories in real time as the simulation runs — worth seeing at least once. Enable fast mode to skip straight to results.</span>
+        </div>
+      </div>
+      <div class="defaults-bar" style="margin-top:8px">
+        <span class="defaults-bar-text">Recording &amp; retention — using defaults.</span>
+        <button class="btn-secondary defaults-toggle-btn" onclick="app.toggleCalibration('run-advanced', this)">Customise ▾</button>
+      </div>
+      <div id="run-advanced" class="calibration-detail" style="display:none">
+        <div class="field-row">
+          <div class="field-group">
+            <label>Recording frequency</label>
+            <select id="data-granularity">
+              <option value="full_fidelity" selected>Every day (default)</option>
+              <option value="every_5">Every 5 days (faster, less detail)</option>
+              <option value="end_state">Final state only (fastest)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Data retention</label>
+            <select id="storage-mode">
+              <option value="full" selected>Full detail (enables replay)</option>
+              <option value="aggregate_only">Summary only (no replay)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-footer">
+      <div></div>
+      <button id="next-tab-btn" class="btn-primary" onclick="app.nextTab()">Next →</button>
+      <button id="run-sim-btn" class="btn-primary" style="display:none" onclick="app.startBatch()">Run simulation →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Runtime view ────────────────────────────────────────────────────────── -->
+<div id="view-runtime" class="view">
+  <div class="runtime-layout">
+
+    <!-- Three-column row: sidebar / network / agent cards -->
+    <div class="runtime-row">
+
+      <!-- Left: simulation status -->
+      <aside class="runtime-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-label">Scenario</div>
+          <div id="rt-scenario-name" class="sidebar-value"></div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">Runs complete</div>
+          <div id="rt-progress" class="sidebar-value">0 / 0</div>
+          <div class="progress-bar-outer"><div id="rt-progress-bar" class="progress-bar-inner" style="width:0%"></div></div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">Current day</div>
+          <div id="rt-tick" class="sidebar-value mono">0 / 0</div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">Shock status</div>
+          <div id="rt-shock-status" class="sidebar-value">—</div>
+        </div>
+        <div class="sidebar-section">
+          <button id="rt-pause-btn" class="btn-secondary rt-pause-btn" onclick="app.togglePause()">⏸ Pause</button>
+        </div>
+      </aside>
+
+      <!-- Centre: D3 network + live chart -->
+      <main class="runtime-centre">
+        <div class="ticker-row" id="ticker-row"></div>
+        <div class="chart-subtitle" style="padding: 2px 4px 6px; margin-bottom: 0">Prices are relative to a pre-shock baseline of 100 — moves reflect agent (mis)pricing behaviour, not absolute returns.</div>
+        <div id="network-container">
+          <svg id="network-svg"></svg>
+        </div>
+        <div class="network-legend">
+          <span class="nl-item"><b style="color:var(--text-0)">Network:</b> each card is an investor type — node size reflects capital weight, larger nodes have more market impact. Particles show live trading: flowing toward the market = buying, flowing away = selling.</span>
+          <span class="nl-divider"></span>
+          <span class="nl-item">Particle colour = investor type &nbsp;·&nbsp; Bar on each card = buy (gold) / sell (red) &nbsp;·&nbsp; Click any card to view investor personas.</span>
+        </div>
+        <div class="live-chart-section">
+          <div class="live-chart-header">
+            <span class="live-chart-title">Price trajectories — run 1 live <span style="color:var(--text-2);font-weight:400;font-size:10px">· all runs shown in results · click a sector below to switch</span></span>
+            <div id="live-chart-toggle" class="live-chart-toggle"></div>
+          </div>
+          <div id="live-chart-container">
+            <svg id="live-chart-svg"></svg>
+          </div>
+        </div>
+      </main>
+
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ── Output view ─────────────────────────────────────────────────────────── -->
+<div id="view-output" class="view">
+  <div class="output-layout">
+
+    <header class="output-header">
+      <span id="out-scenario-name" class="output-header-brand"></span>
+      <div class="output-header-actions">
+        <span id="out-sanity-badges"></span>
+        <button class="btn-secondary" onclick="app.showSetup()">New run</button>
+      </div>
+    </header>
+
+    <div class="output-body">
+      <div class="output-two-col">
+
+        <!-- ── LEFT: Investment implications ── -->
+        <div class="output-col-left">
+
+          <!-- Investment Thesis -->
+          <div class="output-signal-band">
+            <div class="output-col-label">INVESTMENT IMPLICATIONS</div>
+            <div class="chart-title">Investment Thesis</div>
+            <div id="out-signal-text" class="signal-text"></div>
+          </div>
+
+          <!-- Price trajectories -->
+          <div class="output-col-chart">
+            <div class="chart-title">Price trajectories — all runs</div>
+            <div class="sector-selector" id="chart-sector-selector"></div>
+            <div id="chart-spaghetti"></div>
+          </div>
+
+          <!-- Investment Briefing -->
+          <div class="output-briefing-col">
+            <div class="chart-title">Investment Briefing — full analysis</div>
+            <div id="narrative-text" class="narrative-body"></div>
+          </div>
+
+        </div>
+
+        <!-- ── RIGHT: Model evidence ── -->
+        <div class="output-col-right">
+
+          <!-- Model Signal -->
+          <div class="output-model-signal-band">
+            <div class="output-col-label">MODEL EVIDENCE</div>
+            <div class="chart-title">Model Signal</div>
+            <div id="out-model-signal-text" class="model-signal-text"></div>
+          </div>
+
+          <!-- Mispricing box plot -->
+          <div class="output-col-chart">
+            <div class="chart-title">Final mispricing by sector</div>
+            <div class="chart-subtitle">Ceteris paribus relative (mis)pricing pressure — the baseline of 100 is a proxy for prevailing market consensus, not a fixed price. A +5% reading means agents systematically priced that sector 5% above consensus; it does not mean the absolute price rose. A tight distribution away from zero is a robust finding. A wide spread means the result is sensitive to population composition. Near-zero with a tight distribution = strong signal of no mispricing. Each dot = one run. Box = P25–P75; whiskers = full range.</div>
+            <div id="chart-mispricing"></div>
+          </div>
+
+          <!-- Meta sections -->
+          <div class="output-meta-col">
+            <div class="output-meta-section">
+              <div class="chart-title">Results Health Check <span class="output-meta-label">— how much to trust the signal</span></div>
+              <div id="sanity-checks-detail"></div>
+            </div>
+            <div class="output-meta-section">
+              <div class="chart-title">Signal consistency <span class="output-meta-label">— structural finding or noise?</span></div>
+              <div class="chart-subtitle" style="margin-bottom:8px">% of runs ending in the same direction by sector — sorted by consistency. 100% = structural finding; near 50% = noise.</div>
+              <div id="type-activity-summary"></div>
+            </div>
+            <div class="output-meta-section">
+              <div class="chart-title">Replay a Run <span class="output-meta-label">— inspect individual run dynamics</span></div>
+              <div id="replay-controls"></div>
+            </div>
+            <div class="output-meta-section" id="agent-traces-section" style="display:none">
+              <div class="chart-title">Agent Traces <span class="output-meta-label">— notable individual trades</span></div>
+              <div class="chart-subtitle" style="margin-bottom:6px">Noteworthy individual trades from the live view run. <span style="color:var(--text-2)">Hover tags for explanation. Click any row for the agent's full log.</span></div>
+              <div id="agent-traces-summary" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px"></div>
+              <div id="agent-traces-list" style="max-height:220px;overflow-y:auto"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Profile modal ───────────────────────────────────────────────────────── -->
+<div id="profile-modal-overlay" class="modal-overlay" style="display:none" onclick="profiles.closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <span id="modal-type-code" class="modal-type-code"></span>
+        <span id="modal-type-name" class="modal-type-name"></span>
+      </div>
+      <button class="modal-close" onclick="profiles.closeModal()">✕</button>
+    </div>
+    <p id="modal-type-desc" class="modal-type-desc"></p>
+    <div id="modal-body" class="modal-body"></div>
+  </div>
+</div>
+
+<!-- ── Agent trace modal ───────────────────────────────────────────────────── -->
+<div id="trace-modal-overlay" class="modal-overlay" style="display:none" onclick="profiles.closeTraceModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <span id="trace-modal-type-code" class="modal-type-code"></span>
+        <span id="trace-modal-type-name" class="modal-type-name"></span>
+        <span id="trace-modal-variant" style="color:var(--text-2);font-size:12px;margin-left:6px"></span>
+      </div>
+      <button class="modal-close" onclick="profiles.closeTraceModal()">✕</button>
+    </div>
+    <div id="trace-modal-body" class="modal-body"></div>
+  </div>
+</div>
+
+<script src="/static/js/api.js?v=42"></script>
+<script src="/static/js/network.js?v=43"></script>
+<script src="/static/js/setup.js?v=48"></script>
+<script src="/static/js/runtime.js?v=43"></script>
+<script src="/static/js/charts.js?v=44"></script>
+<script src="/static/js/output.js?v=47"></script>
+<script src="/static/js/profiles.js?v=42"></script>
+<script src="/static/js/app.js?v=45"></script>
+
+</body>
+</html>

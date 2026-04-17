@@ -1,0 +1,14 @@
+# Core dependencies
+numpy>=1.20.0
+pyyaml>=5.4.0
+tqdm>=4.62.0
+python-dotenv>=1.0.0  # For .env file support
+
+# LLM providers (optional - choose one or both)
+anthropic>=0.25.0  # For Claude API
+openai>=1.0.0      # For GPT API
+
+# Dashboard dependencies
+dash>=2.0.0
+plotly>=5.0.0
+pandas>=1.3.0

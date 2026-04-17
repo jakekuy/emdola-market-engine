@@ -1,0 +1,154 @@
+# LLM-Enhanced ABM Configuration
+
+# Simulation Parameters
+simulation:
+  total_days: 504  # 2 years of trading days (~252 per year)
+  random_seed: 42
+
+# Agent Population
+agents:
+  total_count: 150  # Total number of agent instances
+  total_capital: 10000000000  # $10B total capital in simulation
+
+  # Agent type distribution (percentages, should sum to ~100)
+  distribution:
+    pension_fund: 15          # 15% of agents
+    mutual_fund: 20
+    sovereign_wealth: 5
+    insurance: 10
+    value_hedge_fund: 8
+    momentum_hedge_fund: 8
+    macro_hedge_fund: 7
+    activist: 5
+    retail_momentum: 10
+    retail_value: 7
+    market_maker: 3
+    hft: 2
+
+  # Capital allocation (percentages, should sum to 100)
+  capital_distribution:
+    pension_fund: 18
+    mutual_fund: 22
+    sovereign_wealth: 8
+    insurance: 12
+    value_hedge_fund: 9
+    momentum_hedge_fund: 8
+    macro_hedge_fund: 7
+    activist: 4
+    retail_momentum: 6
+    retail_value: 4
+    market_maker: 1
+    hft: 1
+
+# Market Structure
+market:
+  initial_cash_per_agent: 1000000  # $1M base allocation (scaled by capital weight)
+
+  # Asset categories
+  assets:
+    - name: "Growth/Tech"
+      ticker: "TECH"
+      initial_price: 100.0
+      volatility: 0.02  # Daily volatility
+
+    - name: "Value/Financials"
+      ticker: "VALUE"
+      initial_price: 100.0
+      volatility: 0.015
+
+    - name: "Safe Haven"
+      ticker: "SAFE"
+      initial_price: 100.0
+      volatility: 0.005
+
+  # Correlation matrix (simplified)
+  correlations:
+    tech_value: 0.6
+    tech_safe: -0.2
+    value_safe: -0.1
+
+# Trading Rules
+trading:
+  # Position sizing (% of portfolio)
+  max_position_pct:
+    institutional: 10  # Max 10% per position
+    hedge_fund: 20     # Max 20% per position
+    retail: 30         # Max 30% per position (less diversified)
+
+  # Confidence to position size mapping
+  confidence_to_size:
+    very_high: 0.10    # 10% of portfolio
+    high: 0.06
+    moderate: 0.03
+    low: 0.01
+    very_low: 0.00     # No action
+
+  # Risk constraints
+  risk_limits:
+    var_95_daily:      # Daily VaR limit (% of portfolio)
+      institutional: 2
+      hedge_fund: 5
+      retail: 8
+
+    max_drawdown:      # Max acceptable drawdown
+      institutional: 15
+      hedge_fund: 25
+      retail: 40
+
+    max_leverage:
+      institutional: 1.0
+      hedge_fund: 2.0
+      retail: 1.0
+
+# LLM Integration
+llm:
+  provider: "anthropic"  # anthropic, openai, or local
+  model: "claude-sonnet-4.5"
+
+  # When to trigger recalibration
+  recalibration:
+    enabled: true
+    triggers:
+      major_move_threshold: 0.05      # 5% single-day move
+      quarterly_reflection: 90         # Every 90 days
+      drawdown_threshold: 0.20        # 20% portfolio drawdown
+      volatility_regime_shift: 0.03   # Volatility shift threshold
+
+# Events & Information
+events:
+  # News frequency (days between events)
+  news_frequency: 5  # News event every 5 days on average
+
+  # Shock events (will be triggered manually in scenarios)
+  shocks:
+    - type: "earnings_surprise"
+      probability: 0.02  # 2% chance per day
+    - type: "macro_announcement"
+      probability: 0.01
+    - type: "geopolitical"
+      probability: 0.005
+
+# Data Collection
+data_collection:
+  track_individual_agents: true
+  save_order_book_snapshots: false  # Performance intensive
+  metrics:
+    - prices
+    - volumes
+    - portfolios
+    - sentiment
+    - volatility
+    - correlation
+
+# Validation
+validation:
+  stylized_facts:
+    - fat_tails
+    - volatility_clustering
+    - volume_correlation
+    - flight_to_quality
+
+  target_metrics:
+    return_kurtosis: 5.0  # Excess kurtosis
+    return_skew: -0.3     # Negative skew
+    vol_persistence: 0.7  # GARCH alpha + beta

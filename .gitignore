@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime data — batch results and custom profiles are ephemeral
+data/runs/
+data/profiles/profiles.json
+
+# Logs and test artifacts
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
