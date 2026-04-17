@@ -121,7 +121,7 @@ const charts = (() => {
         type: 'scatter',
         mode: 'lines',
         line: { color: '#d4a80e', width: 2 },
-        name: 'Mean',
+        name: sector === 'Mkt' ? 'All sectors (avg)' : 'Mean',
         showlegend: true,
         hovertemplate: `<b>Mean</b><br>Day %{x}<br>Price: %{y:.2f}<extra></extra>`,
       });
@@ -136,7 +136,7 @@ const charts = (() => {
         y: [...p90, ...p10.slice().reverse()],
         type: 'scatter',
         fill: 'toself',
-        fillcolor: 'rgba(212,168,14,0.07)',
+        fillcolor: 'rgba(212,168,14,0.15)',
         line: { color: 'transparent' },
         showlegend: true,
         hoverinfo: 'skip',

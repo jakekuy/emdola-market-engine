@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EMDOLA — Market Simulation</title>
-  <link rel="stylesheet" href="/static/css/styles.css?v=50" />
+  <link rel="stylesheet" href="/static/css/styles.css?v=51" />
   <!-- D3.js v7 -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <!-- Plotly.js -->
@@ -333,18 +333,16 @@
       <!-- Centre: D3 network + live chart -->
       <main class="runtime-centre">
         <div class="ticker-row" id="ticker-row"></div>
-        <div class="chart-subtitle" style="padding: 2px 4px 6px; margin-bottom: 0">Prices are relative to a pre-shock baseline of 100 — moves reflect agent (mis)pricing behaviour, not absolute returns.</div>
+        <div class="chart-subtitle" style="padding: 2px 4px 6px; margin-bottom: 0">Base = 100 — moves reflect agent (mis)pricing pressure, not absolute returns.</div>
         <div id="network-container">
           <svg id="network-svg"></svg>
         </div>
         <div class="network-legend">
-          <span class="nl-item"><b style="color:var(--text-0)">Network:</b> each card is an investor type — node size reflects capital weight, larger nodes have more market impact. Particles show live trading: flowing toward the market = buying, flowing away = selling.</span>
-          <span class="nl-divider"></span>
-          <span class="nl-item">Particle colour = investor type &nbsp;·&nbsp; Bar on each card = buy (gold) / sell (red) &nbsp;·&nbsp; Click any card to view investor personas.</span>
+          <span class="nl-item"><b style="color:var(--text-0)">Network:</b> eight investor types. Particles flowing toward centre = buying; away = selling. Particle colour = investor type. Bar on each card = buy (gold) / sell (red). Click any card → investor personas.</span>
         </div>
         <div class="live-chart-section">
           <div class="live-chart-header">
-            <span class="live-chart-title">Price trajectories — run 1 live <span style="color:var(--text-2);font-weight:400;font-size:10px">· all runs shown in results · click a sector below to switch</span></span>
+            <span class="live-chart-title">Price trajectories — run 1 live <span style="color:var(--text-2);font-weight:400;font-size:10px">· all runs shown in results · click a sector to the right to switch</span></span>
             <div id="live-chart-toggle" class="live-chart-toggle"></div>
           </div>
           <div id="live-chart-container">
@@ -482,7 +480,7 @@
 <script src="/static/js/network.js?v=43"></script>
 <script src="/static/js/setup.js?v=49"></script>
 <script src="/static/js/runtime.js?v=43"></script>
-<script src="/static/js/charts.js?v=44"></script>
+<script src="/static/js/charts.js?v=45"></script>
 <script src="/static/js/output.js?v=47"></script>
 <script src="/static/js/profiles.js?v=42"></script>
 <script src="/static/js/app.js?v=45"></script>
