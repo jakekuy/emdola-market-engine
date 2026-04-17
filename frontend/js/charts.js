@@ -123,7 +123,7 @@ const charts = (() => {
         line: { color: '#d4a80e', width: 2 },
         name: sector === 'Mkt' ? 'All sectors (avg)' : 'Mean',
         showlegend: true,
-        hovertemplate: `<b>Mean</b><br>Day %{x}<br>Price: %{y:.2f}<extra></extra>`,
+        hovertemplate: `<b>Mean</b><br>Day %{x}<br>Index: %{y:.2f}<extra></extra>`,
       });
     }
 
@@ -159,7 +159,7 @@ const charts = (() => {
 
     const layout = {
       ...PLOTLY_LAYOUT_BASE,
-      yaxis: { ...PLOTLY_LAYOUT_BASE.yaxis, title: 'Price' },
+      yaxis: { ...PLOTLY_LAYOUT_BASE.yaxis, title: 'Index (base 100)' },
       xaxis: { ...PLOTLY_LAYOUT_BASE.xaxis, title: 'Day' },
       legend: { font: { color: '#807c76', size: 11 }, bgcolor: 'transparent' },
       hovermode: 'closest',
