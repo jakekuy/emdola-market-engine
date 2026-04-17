@@ -156,7 +156,7 @@ const charts = (() => {
         type: 'scatter',
         mode: 'none',
         fill: 'toself',
-        fillcolor: 'rgba(212,168,14,0.35)',
+        fillcolor: 'rgba(255,255,255,0.07)',
         line: { color: 'rgba(0,0,0,0)', width: 0 },
         showlegend: true,
         hoverinfo: 'skip',
