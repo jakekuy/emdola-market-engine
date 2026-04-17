@@ -1639,6 +1639,7 @@ body.landing-mode #top-nav { display: none; }
   .landing-key-phrase { white-space: normal; }
 
   /* Setup */
+  #scenario-desc { min-height: 80px; }
   .setup-container { max-width: 100%; padding: 0; }
   .tab-bar { gap: 0; overflow-x: auto; padding: 0 8px; }
   .tab-btn { font-size: 11px; padding: 10px 10px; white-space: nowrap; }
@@ -1712,10 +1713,10 @@ body.landing-mode #top-nav { display: none; }
     font-size: 11px;
   }
 
-  /* Runtime — stack sidebar above network */
-  .runtime-layout { overflow: visible; }
-  .runtime-row { grid-template-columns: 1fr; grid-template-rows: auto auto; min-height: 0; overflow: visible; }
-  .runtime-centre { overflow: visible; min-height: 0; }
+  /* Runtime — stack sidebar above network, contain everything to viewport width */
+  .runtime-layout { overflow: hidden; max-width: 100vw; width: 100%; }
+  .runtime-row { grid-template-columns: 1fr; grid-template-rows: auto auto; max-width: 100vw; width: 100%; overflow: hidden; }
+  .runtime-centre { overflow: hidden; max-width: 100vw; width: 100%; }
   .runtime-sidebar {
     border-right: none;
     border-bottom: 1px solid var(--bg-3);
@@ -1731,9 +1732,9 @@ body.landing-mode #top-nav { display: none; }
   .progress-bar-outer { display: none; }
   .sidebar-section:last-child { width: 100%; margin-right: 0; }
 
-  /* Runtime — ticker scrollable */
-  .ticker-row { padding: 6px 10px; }
-  .ticker-item { min-width: 56px; }
+  /* Runtime — ticker scrollable within contained width */
+  .ticker-row { padding: 6px 10px; max-width: 100vw; overflow-x: auto; }
+  .ticker-item { min-width: 56px; flex-shrink: 0; }
 
   /* Runtime — network and chart sized for mobile */
   #network-container { min-height: 0; height: 320px; flex: none; width: 100%; overflow: hidden; }
