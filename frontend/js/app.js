@@ -257,6 +257,7 @@ const app = (() => {
   function showRuntime() {
     _setView('view-runtime');
     _updateNav('nav-runtime');
+    window.parent.postMessage('emdola:run_started', '*');
     // Only update comms if we're not mid-simulation (mid-sim comms are managed by WS events).
     if (!_simRunning) {
       _setComms('info', 'Live view — simulation has completed.', 'Navigate to Results to see the full output.');
@@ -267,6 +268,7 @@ const app = (() => {
     _setView('view-output');
     _updateNav('nav-output');
     _setComms('success', 'Simulation complete.', 'Results and investment briefing shown below.');
+    window.parent.postMessage('emdola:results_ready', '*');
   }
 
   function _setView(id) {

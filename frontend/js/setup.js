@@ -557,6 +557,8 @@ const setup = (() => {
     const runsEl  = document.getElementById('num-runs');
     if (ticksEl) ticksEl.value = p.total_ticks;
     if (runsEl)  runsEl.value  = p.num_runs;
+
+    window.parent.postMessage('emdola:preset_loaded', '*');
   }
 
   return { init, addShock, removeShock, onSeedPolicyChange, buildCalibration, loadPreset, clearPreset, updateLambdaCtx: _updateLambdaCtx };
