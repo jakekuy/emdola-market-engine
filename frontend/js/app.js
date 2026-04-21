@@ -612,6 +612,7 @@ const app = (() => {
 
     const savedMeta = await api.getSavedProfilesMeta();
     _renderPersonasFooter(savedMeta);
+    if (_isEmbed && savedMeta) useSavedProfiles();
 
     // Pre-populate comms for when user enters setup.
     if (savedMeta) {

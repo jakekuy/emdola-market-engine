@@ -71,6 +71,7 @@ const setup = (() => {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.tab).classList.add('active');
+        if (btn.dataset.tab === 'tab-run') window.parent.postMessage('emdola:run_tab', '*');
       });
     });
   }
