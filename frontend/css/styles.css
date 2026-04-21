@@ -1754,3 +1754,12 @@ body.landing-mode #top-nav { display: none; }
 
 /* Embed mode */
 body.embed-mode #personas-footer { display: none; }
+body.embed-mode #tab-market .calibration-detail input,
+body.embed-mode #tab-market .calibration-detail select,
+body.embed-mode #tab-market .calibration-detail button,
+body.embed-mode #tab-shocks .calibration-detail input,
+body.embed-mode #tab-shocks .calibration-detail select,
+body.embed-mode #tab-shocks .calibration-detail button,
+body.embed-mode #tab-agents .calibration-detail input,
+body.embed-mode #tab-agents .calibration-detail select,
+body.embed-mode #tab-agents .calibration-detail button { pointer-events: none; opacity: 0.7; }
