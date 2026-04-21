@@ -9,6 +9,9 @@
  * Step 2: startBatch() — POST /api/batch/start?profiles_id=..., stream ticks via WS.
  */
 const app = (() => {
+  const _isEmbed = new URLSearchParams(window.location.search).get('embed') === 'true';
+  if (_isEmbed) document.body.classList.add('embed-mode');
+
   let _currentBatchId    = null;
   let _currentProfilesId = null;
   let _currentCalibration = null;

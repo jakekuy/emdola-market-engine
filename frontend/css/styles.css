@@ -1751,3 +1751,6 @@ body.landing-mode #top-nav { display: none; }
   .run-summary { padding: 10px 14px; }
   .sanity-grid { grid-template-columns: 1fr; }
 }
+
+/* Embed mode */
+body.embed-mode #personas-footer { display: none; }
