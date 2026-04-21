@@ -120,9 +120,9 @@ const setup = (() => {
           </div>
           <div class="field-row">
             <div class="field-group">
-              <label>Number of agents</label>
-              <input id="agent-count-${type}" type="number" min="30" max="200" step="10" placeholder="Default (30)" />
-              <span class="hint">30–200 per type</span>
+              <label>Force agent count</label>
+              <input id="agent-count-${type}" type="number" min="10" max="200" step="10" placeholder="Auto" />
+              <span class="hint">Leave blank to let the model vary this type's count across runs. Enter a value (10–200) to fix it exactly — this disables auto-distribution for all types.</span>
             </div>
             <div class="field-group">
               <label>Total capital (billions USD)</label>
@@ -244,7 +244,7 @@ const setup = (() => {
       const count   = parseInt(countEl?.value);
       const aum     = parseFloat(aumEl?.value);
       const entry = {};
-      if (!isNaN(count) && count >= 30) entry.agent_count = count;
+      if (!isNaN(count) && count >= 10) entry.agent_count = count;
       if (!isNaN(aum) && aum > 0) entry.aum_override = aum;
       if (Object.keys(entry).length > 0) overrides[type] = entry;
     });

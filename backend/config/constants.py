@@ -116,7 +116,7 @@ ARCHETYPE_DIRICHLET_ALPHA: float = 0.5
 # differently to the same shock, creating the spaghetti spread.
 TYPE_DIRICHLET_ALPHA: float = 0.5
 # Minimum agents of each type per run: keeps all 8 types represented.
-MIN_AGENTS_PER_TYPE: int = 3
+MIN_AGENTS_PER_TYPE: int = 10
 
 # ── Chartist signal amplification ────────────────────────────────────────────
 # Scales the weighted log-return sum before tanh in compute_chartist_signal.

@@ -145,8 +145,8 @@ class AgentTypeOverride(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     agent_count: int | None = Field(
-        None, ge=30, le=200,
-        description="Number of agents of this type. Minimum 30, maximum 200."
+        None, ge=10, le=200,
+        description="Number of agents of this type. Minimum 10, maximum 200."
     )
     aum_override: float | None = Field(
         None, gt=0,
