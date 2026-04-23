@@ -472,12 +472,15 @@ const setup = (() => {
         '(risk-on across beaten sectors, oil sell-off) stacked with a slower chronic normalisation as actual supply flows ' +
         'return to market (market channel only, lower magnitude, no reversion). ' +
         'The model question: across the closure–reopening cycle, which sectors are systematically mispriced relative to ' +
-        'the consensus playbook? The non-consensus hypotheses tested: (1) Energy does not give back as much of its closure ' +
-        'gain as the reopening implies — structural capex underinvestment during disruption, OPEC+ opportunism, and residual ' +
-        'Iran risk premium sustain an elevated floor; (2) Financials overshoots on the relief rally — credit markets and ' +
-        'HY energy loan books normalise more slowly than equity prices; (3) Consumer Staples fails to recover its defensive ' +
-        'status — agricultural supply chain damage outlasts the strait opening; (4) Technology leads the relief rally but ' +
-        'overshoots — semiconductor lead times do not heal at announcement speed.',
+        'the consensus playbook? The reopening is modelled as two stages: an acute announcement shock (narrative-driven ' +
+        'relief across beaten sectors; oil and materials sell off on deal news) followed by a chronic normalisation applied ' +
+        'to Energy only. Materials is deliberately excluded from the normalisation stage. Empirical evidence confirms that ' +
+        'fertiliser and ammonia supply chains — which account for 46% of global urea supply from the Gulf — do not recover ' +
+        'when oil tanker flows resume. Unlike oil, no bypass infrastructure exists for Gulf fertiliser exports; urea prices ' +
+        'rose 50% within weeks of closure and structural recovery timelines are measured in months to years, not days. ' +
+        'The scenario therefore tests whether the market correctly prices this asymmetry: oil recovers with the strait; ' +
+        'fertiliser and industrial commodity supply chains do not. The non-consensus question is whether agents ' +
+        'systematically misprice Materials by treating it as an oil proxy rather than a structurally disrupted supply chain.',
       lambdas: [1.50, 2.00, 1.20, 1.20, 1.00, 1.20, 0.80, 0.80, 1.20, 1.80, 2.50],
       nm_intensity: 0.65,
       narrative_half_life: 10,
@@ -501,11 +504,14 @@ const setup = (() => {
         // markets have partially adapted (re-routing, strategic reserves); partial deal leaves uncertainty.
         // Both channels: announcement is narrative-driven first, fundamentals follow.
         { onset: 75, duration: 15, magnitude:  0.08, type: 'acute',   channel: 'both',   reversion: true,  sectors: [2, 3, 4, 6, 7, 8, 10] },
-        // ── Phase 2B: Normalisation — chronic structural, market channel only (ticks 75–125) ──
-        // Energy + Materials: gradual supply return as tanker traffic resumes, insurance recalibrates,
-        // inventory pipelines refill. Market channel only — fundamental, not narrative.
-        // No reversion: structural supply recovery, not a temporary signal.
-        { onset: 75, duration: 50, magnitude: -0.06, type: 'chronic', channel: 'market', reversion: false, sectors: [0, 1] },
+        // ── Phase 2B: Normalisation — Energy only (ticks 75–125) ──────────────
+        // Energy only: oil tanker flows resume as the strait reopens, insurance recalibrates,
+        // strategic reserve releases slow. Market channel only — fundamental supply return, not narrative.
+        // Materials is excluded: Gulf fertiliser and ammonia supply chains (46% of global urea) have
+        // no bypass infrastructure and do not recover when tanker traffic resumes. Urea prices rose
+        // 50% within weeks and structural recovery is measured in months to years, not ticks.
+        // No reversion: the partial supply recovery is structural, not temporary.
+        { onset: 75, duration: 50, magnitude: -0.06, type: 'chronic', channel: 'market', reversion: false, sectors: [0] },
       ],
     },
   };

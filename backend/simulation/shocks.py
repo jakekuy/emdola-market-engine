@@ -52,9 +52,10 @@ class ShockProcessor:
         narrative_half_life: int = 10,
     ) -> None:
         T = total_ticks
-        # P0_effective per tick per sector: initialised to P0 everywhere.
-        # Shock precomputation overlays changed-belief regions.
-        self._p0_effective: np.ndarray = np.full((T, NUM_SECTORS), P0, dtype=float)
+        # Delta accumulator per tick per sector: each shock adds its own
+        # contribution; P0_effective = P0 + _delta, so multiple shocks on
+        # the same sector stack correctly rather than overwriting each other.
+        self._delta: np.ndarray = np.zeros((T, NUM_SECTORS), dtype=float)
         # Influence channel direction and intensity per tick per sector.
         self._inf_directions: np.ndarray = np.zeros((T, NUM_SECTORS))
         self._inf_intensities: np.ndarray = np.zeros((T, NUM_SECTORS))
@@ -66,6 +67,8 @@ class ShockProcessor:
         self._influence_decay_rate: float = math.log(2) / max(narrative_half_life, 1)
         self._total_ticks = T
         self._precompute(shocks)
+        # Build P0_effective from accumulated deltas.
+        self._p0_effective: np.ndarray = P0 + self._delta
 
     # ── Precomputation ────────────────────────────────────────────────────────
 
@@ -78,41 +81,41 @@ class ShockProcessor:
             sectors = shock.affected_sectors
             inf_end = min(onset + dur, T)
 
-            # ── Market channel: update P0_effective ───────────────────────────
-            # P0_eff[t, k] is the "fair value" that fundamentalist agents target.
-            # The shock changes what the market believes the sector is worth;
-            # agents then drive prices toward this new belief emergently.
+            # ── Market channel: accumulate delta onto P0_effective ────────────
+            # Each shock adds its own signed delta (P0 * mag) to _delta rather
+            # than writing an absolute value.  Multiple shocks on the same sector
+            # therefore stack correctly: a +0.15 closure shock followed by a
+            # -0.06 normalisation shock on the same sector produces a net +0.09
+            # effect, not a -0.06 overwrite.
             if shock.channel in ("market", "both"):
-                p0_target = P0 * (1.0 + mag)  # e.g. 100 * 1.15 = 115.0
+                delta_target = P0 * mag  # e.g. P0=100, mag=0.15 → delta=+15
 
                 if shock.shock_type == "acute":
                     if onset < T:
                         for k in sectors:
-                            self._p0_effective[onset, k] = p0_target
+                            self._delta[onset, k] += delta_target
                     if shock.reversion:
-                        # Linear reversion back to P0 over `dur` ticks after onset.
+                        # This shock's delta linearly decays back to 0 over dur ticks.
                         for t in range(onset + 1, min(onset + dur + 1, T)):
                             frac = (t - onset) / dur   # 0 < frac ≤ 1
-                            reverted = P0 + (p0_target - P0) * (1.0 - frac)
                             for k in sectors:
-                                self._p0_effective[t, k] = reverted
-                        # Ticks after full reversion: stay at P0 (already initialised)
+                                self._delta[t, k] += delta_target * (1.0 - frac)
+                        # After full reversion this shock contributes 0 — no further add.
                     else:
-                        # No reversion: P0_eff stays at p0_target for all later ticks.
+                        # No reversion: delta holds at delta_target for all later ticks.
                         for t in range(onset + 1, T):
                             for k in sectors:
-                                self._p0_effective[t, k] = p0_target
+                                self._delta[t, k] += delta_target
 
                 else:  # chronic: ramp up over duration, then hold
                     for t in range(onset, min(onset + dur, T)):
                         frac = (t - onset + 1) / dur   # 1/dur … 1.0
-                        p0_at_t = P0 + (p0_target - P0) * frac
                         for k in sectors:
-                            self._p0_effective[t, k] = p0_at_t
-                    # After ramp-up, hold at full target.
+                            self._delta[t, k] += delta_target * frac
+                    # After ramp-up, hold at full delta_target.
                     for t in range(min(onset + dur, T), T):
                         for k in sectors:
-                            self._p0_effective[t, k] = p0_target
+                            self._delta[t, k] += delta_target
 
             # ── Influence channel ─────────────────────────────────────────────
             if shock.channel in ("influence", "both"):
