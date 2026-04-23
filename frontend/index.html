@@ -77,7 +77,7 @@
   <div id="comms-spinner" class="comms-spinner" style="display:none"></div>
   <div id="comms-icon" class="comms-icon">●</div>
   <div class="comms-content">
-    <div id="comms-message" class="comms-message">Configure your scenario, generate agent profiles, then run the simulation.</div>
+    <div id="comms-message" class="comms-message">Configure your scenario, generate agent personas, then run the simulation.</div>
     <div id="comms-sub" class="comms-sub"></div>
   </div>
 </div>
@@ -104,7 +104,7 @@
         <div class="tab-intro-icon"><i data-lucide="users"></i></div>
         <div>
           <div class="tab-intro-title">Scenarios &amp; Personas</div>
-          <div class="tab-intro-desc">A large language model generates 3 distinct investor personas for each of the 8 investor types. Your scenario name, description, and any shocks you define are passed as context — configure those tabs first for more scenario-relevant profiles.</div>
+          <div class="tab-intro-desc">A large language model generates 3 distinct investor personas for each of the 8 investor types. Your scenario name, description, and any shocks you define are passed as context — configure those tabs first for more scenario-relevant personas.</div>
         </div>
       </div>
 
@@ -128,7 +128,7 @@
         <input id="scenario-name" type="text" placeholder="e.g. Iran — Strait of Hormuz" />
       </div>
       <div class="field-group">
-        <label>Market environment <span class="hint">Optional — describe the macro regime before the shock (e.g. elevated inflation, rising rates). Passed to the model when generating investor profiles.</span></label>
+        <label>Market environment <span class="hint">Optional — describe the macro regime before the shock (e.g. elevated inflation, rising rates). Passed to the model when generating investor personas.</span></label>
         <textarea id="market-context" rows="2" placeholder="e.g. elevated inflation, rising rates, post-pandemic recovery, high retail participation."></textarea>
       </div>
       <div class="field-group">
@@ -142,7 +142,7 @@
       </div>
 
       <div id="profiles-type-grid" class="profiles-type-grid">
-        <p class="hint profiles-empty-hint">Select a preset above, or generate profiles for your own scenario using the button below.</p>
+        <p class="hint profiles-empty-hint">Select a preset above, or generate personas for your own scenario using the button below.</p>
       </div>
     </div>
 
@@ -226,7 +226,7 @@
         <div class="tab-intro-icon"><i data-lucide="play"></i></div>
         <div>
           <div class="tab-intro-title">Run configuration</div>
-          <div class="tab-intro-desc">Set the simulation duration and number of runs.<span id="run-tab-profiles-warning" style="display:none"> <span style="color:var(--red)">Agent profiles not loaded —</span> <a href="#" onclick="app.showSetup();document.querySelector('[data-tab=\'tab-profiles\']').click();return false;" style="color:var(--accent)">return to Scenarios &amp; Personas.</a></span></div>
+          <div class="tab-intro-desc">Set the simulation duration and number of runs.<span id="run-tab-profiles-warning" style="display:none"> <span style="color:var(--red)">Agent personas not loaded —</span> <a href="#" onclick="app.showSetup();document.querySelector('[data-tab=\'tab-profiles\']').click();return false;" style="color:var(--accent)">return to Scenarios &amp; Personas.</a></span></div>
         </div>
       </div>
       <div id="run-summary" class="run-summary"></div>
@@ -241,7 +241,7 @@
         <div class="field-group">
           <label>Number of runs</label>
           <input id="num-runs" type="number" min="1" max="10000" value="10" />
-          <span class="hint">Each run uses a different combination of agent profiles. More runs = more robust results — but each run takes compute time. <strong>Start with 10 runs to check your setup</strong> before committing to 100+.</span>
+          <span class="hint">Each run uses a different combination of agent personas. More runs = more robust results — but each run takes compute time. <strong>Start with 10 runs to check your setup</strong> before committing to 100+.</span>
         </div>
       </div>
       <div class="field-row">

@@ -96,7 +96,7 @@ const app = (() => {
       const dateStr = dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
       const timeStr = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
-      const statusLabel = isDefault ? '✓ Preloaded agents active' : '✓ Custom profiles loaded';
+      const statusLabel = isDefault ? '✓ Preloaded agents active' : '✓ Custom personas loaded';
       const statusMeta  = isDefault
         ? `Ready to run`
         : `Generated ${dateStr} at ${timeStr} · ${savedMeta.scenario_summary}`;
@@ -112,8 +112,8 @@ const app = (() => {
             <span class="saved-profiles-meta">${statusMeta}</span>
           </div>
           <div class="personas-footer-actions">
-            <button class="btn-gold" onclick="app.useSavedProfiles()">Use these profiles</button>
-            <button class="btn-secondary" onclick="app.startProfileGeneration()">Regenerate profiles</button>
+            <button class="btn-gold" onclick="app.useSavedProfiles()">Use preloaded personas</button>
+            <button class="btn-secondary" onclick="app.startProfileGeneration()">Regenerate personas</button>
             ${resetBtn}
           </div>
           <span class="personas-footer-hint">Regenerate fires 8 LLM calls — uses your scenario context to create tailored personas. Defaults are never overwritten.</span>
@@ -121,7 +121,7 @@ const app = (() => {
     } else {
       footer.innerHTML = `
         <div class="personas-footer-inner personas-footer-empty">
-          <button id="personas-generate-btn" class="btn-gold" onclick="app.startProfileGeneration()">Generate agent profiles</button>
+          <button id="personas-generate-btn" class="btn-gold" onclick="app.startProfileGeneration()">Generate agent personas</button>
           <span class="personas-footer-hint">Fires 8 LLM calls — uses your scenario name, description, and shocks to create tailored investor personas.</span>
         </div>`;
     }
@@ -131,8 +131,8 @@ const app = (() => {
 
   const _TAB_COMMS = {
     'tab-profiles': [
-      'Profiles tab — generate LLM-calibrated investor profiles.',
-      'Set your scenario name and description first, then generate profiles. The model uses your scenario context — including any shocks you define — to create realistic personas for each investor type.',
+      'Scenarios & Personas tab — generate LLM-calibrated investor personas.',
+      'Set your scenario name and description first, then generate personas. The model uses your scenario context — including any shocks you define — to create realistic personas for each investor type.',
     ],
     'tab-market': [
       'Market tab — set price sensitivity and signal strength.',
@@ -140,7 +140,7 @@ const app = (() => {
     ],
     'tab-shocks': [
       'Shocks tab — define events or trends that disrupt the market.',
-      'Shocks are included in the context passed to the model when generating profiles, so defining them first produces more scenario-relevant personas.',
+      'Shocks are included in the context passed to the model when generating personas, so defining them first produces more scenario-relevant personas.',
     ],
     'tab-agents': [
       'Agents tab — adjust the investor population.',
@@ -148,7 +148,7 @@ const app = (() => {
     ],
     'tab-run': [
       'Run tab — set simulation parameters, then launch.',
-      'Choose simulation duration and number of Monte Carlo runs. Each run draws a different combination of agent profiles. More runs give more robust distributional results.',
+      'Choose simulation duration and number of Monte Carlo runs. Each run draws a different combination of agent personas. More runs give more robust distributional results.',
     ],
   };
 
@@ -283,35 +283,35 @@ const app = (() => {
   // ── Use saved profiles (no LLM call) ─────────────────────────────────────────
 
   async function useSavedProfiles() {
-    _setComms('loading', 'Loading profiles…', '');
+    _setComms('loading', 'Loading personas…', '');
 
     try {
       const { profiles_id, profiles: profileData, source } = await api.loadSavedProfiles();
       _currentProfilesId = profiles_id;
 
       profiles.init(profileData);
-      const label = source === 'default' ? 'Default profiles loaded' : 'Custom profiles loaded';
+      const label = source === 'default' ? 'Preloaded personas active' : 'Custom personas loaded';
       _setComms('success',
         `${label} — 24 personas ready.`,
-        'Review them in the Profiles tab, configure the remaining tabs as needed, then click "Run simulation →".'
+        'Review them in the Personas tab, configure the remaining tabs as needed, then click "Run simulation →".'
       );
     } catch (err) {
-      _setComms('error', 'Could not load profiles: ' + err.message, '');
+      _setComms('error', 'Could not load personas: ' + err.message, '');
     }
   }
 
   async function resetToDefaultProfiles() {
-    _setComms('loading', 'Resetting to default profiles…', '');
+    _setComms('loading', 'Resetting to default personas…', '');
     try {
       await api.resetToDefaultProfiles();
       const savedMeta = await api.getSavedProfilesMeta();
       _renderPersonasFooter(savedMeta);
       _setComms('info',
-        'Reset to default profiles.',
-        'Default validated agents are active. Regenerate at any time to create scenario-specific profiles.'
+        'Reset to default personas.',
+        'Default validated agents are active. Regenerate at any time to create scenario-specific personas.'
       );
     } catch (err) {
-      _setComms('error', 'Could not reset profiles: ' + err.message, '');
+      _setComms('error', 'Could not reset personas: ' + err.message, '');
     }
   }
 
@@ -325,7 +325,7 @@ const app = (() => {
       const savedMeta = await api.getSavedProfilesMeta();
       _renderPersonasFooter(savedMeta);
       _setComms('error',
-        'Profile generation failed — reverted to default profiles.',
+        'Persona generation failed — reverted to default personas.',
         errorMsg + ' Default validated agents are loaded and ready to use.'
       );
     } catch (_) {
@@ -339,18 +339,18 @@ const app = (() => {
     const genBtn = document.getElementById('personas-generate-btn');
     if (genBtn) { genBtn.disabled = true; genBtn.textContent = 'Starting…'; }
 
-    _setComms('loading', 'Connecting to the model…', 'Preparing to generate agent profiles');
+    _setComms('loading', 'Connecting to the model…', 'Preparing to generate agent personas');
 
     try {
       const { profiles_id } = await api.generateProfiles(calibration);
       _currentProfilesId = profiles_id;
 
-      _setComms('loading', 'Generating agent profiles…', '');
+      _setComms('loading', 'Generating agent personas…', '');
       _startProfileTimer();
 
       _wsHandle = api.connectProfilesWS(profiles_id, _onProfilesWsMessage, _onProfilesWsClose);
     } catch (err) {
-      if (genBtn) { genBtn.disabled = false; genBtn.textContent = 'Generate agent profiles →'; }
+      if (genBtn) { genBtn.disabled = false; genBtn.textContent = 'Generate agent personas →'; }
       await _revertToDefaultsAfterError('Check that the server is running and the API key is configured.');
     }
   }
@@ -361,7 +361,7 @@ const app = (() => {
         _profileGenTypesComplete = data.step;
         const label = TYPE_LABELS_FULL[data.agent_type] || data.agent_type;
         const next  = data.step < data.total ? _nextTypeLabel(data.agent_type) : null;
-        const primary = `Generating profiles — ${data.step} of ${data.total} complete · Finished: ${label}${next ? ` · Up next: ${next}` : ' · Finalising…'}`;
+        const primary = `Generating personas — ${data.step} of ${data.total} complete · Finished: ${label}${next ? ` · Up next: ${next}` : ' · Finalising…'}`;
         const msgEl = document.getElementById('comms-message');
         if (msgEl) msgEl.textContent = primary;
         break;
@@ -378,7 +378,7 @@ const app = (() => {
         if (_wsHandle) { _wsHandle.close(); _wsHandle = null; }
         profiles.init(data.profiles);
         _setComms('success',
-          'All 24 agent profiles generated and saved.',
+          'All 24 agent personas generated and saved.',
           'Review them below, configure the remaining tabs as needed, then click "Run simulation →".'
         );
         break;
@@ -415,8 +415,8 @@ const app = (() => {
       document.querySelector('[data-tab="tab-profiles"]')?.classList.add('active');
       document.getElementById('tab-profiles')?.classList.add('active');
       _setComms('error',
-        'No agent profiles loaded.',
-        'Generate or load profiles in the Profiles tab before running the simulation.'
+        'No agent personas loaded.',
+        'Generate or load personas in the Personas tab before running the simulation.'
       );
       return;
     }
@@ -620,15 +620,15 @@ const app = (() => {
       _setComms('info',
         isDefault
           ? 'Preloaded agents active — ready to run.'
-          : 'Custom profiles available from your last scenario.',
+          : 'Custom personas available from your last scenario.',
         isDefault
-          ? 'Select a preset, configure the remaining tabs, then click "Run simulation →". Regenerate at any time for scenario-specific profiles.'
+          ? 'Select a preset, configure the remaining tabs, then click "Run simulation →". Regenerate at any time for scenario-specific personas.'
           : `"${savedMeta.scenario_name}" — use them or regenerate after updating your scenario. Configure the remaining tabs, then click "Run simulation →".`
       );
     } else {
       _setComms('info',
-        'Configure your scenario, generate agent profiles, then run the simulation.',
-        'Use the 5 tabs above. You can set calibration parameters before or after generating profiles — the model uses your scenario context when creating personas.'
+        'Configure your scenario, generate agent personas, then run the simulation.',
+        'Use the 5 tabs above. You can set calibration parameters before or after generating personas — the model uses your scenario context when creating personas.'
       );
     }
   }
