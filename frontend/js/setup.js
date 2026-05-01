@@ -455,36 +455,30 @@ const setup = (() => {
     hormuz_reopening: {
       scenario_name: 'Iran Conflict — Hormuz Partial Reopening (Two-Phase)',
       scenario_description:
-        'This scenario models two sequential phases of the 2026 Iran–US–Israel conflict: the initial closure of the ' +
-        'Strait of Hormuz and a subsequent partial, negotiated reopening under ceasefire conditions. ' +
-        'Phase 1 — Closure (ticks 40–65): Following US and Israeli airstrikes on Iran in late February 2026, Iran mined and ' +
-        'closed the Strait of Hormuz — the world\'s most critical oil chokepoint, through which roughly 20% of global seaborne ' +
-        'oil supply, 30%+ of global urea, and significant volumes of aluminium and petrochemicals transit. Brent crude spiked ' +
-        'above $130/bbl. Marine war risk insurance surcharges reached 300%. Agricultural fertiliser supply chains tightened sharply. ' +
-        'The consensus reaction was standard stagflation playbook: long energy and materials, short everything rate-sensitive ' +
-        'and supply-chain-exposed, expect central banks to face an impossible growth–inflation tradeoff. ' +
-        'Phase 2 — Partial Reopening (from tick 75): A ceasefire brokered via Pakistan mediation created conditions for a ' +
-        'partial reopening. But the reopening is not a clean reversal. Iran retains a gatekeeping role under the deal terms; ' +
-        'the US naval blockade is eased but not fully lifted; maritime insurance recalibrates slowly; ' +
-        'agricultural supply chains damaged during the closure do not heal at announcement speed. ' +
-        'Oil retreats from the spike peak but does not return to pre-war levels — the structural risk premium persists. ' +
-        'The reopening triggers a two-stage market response: an acute narrative-driven relief rally ' +
-        '(risk-on across beaten sectors, oil sell-off) stacked with a slower chronic normalisation as actual supply flows ' +
-        'return to market (market channel only, lower magnitude, no reversion). ' +
-        'The model question: across the closure–reopening cycle, which sectors are systematically mispriced relative to ' +
-        'the consensus playbook? The reopening is modelled as two stages: an acute announcement shock (narrative-driven ' +
-        'relief across beaten sectors; oil and materials sell off on deal news) followed by a chronic normalisation applied ' +
-        'to Energy only. Materials is deliberately excluded from the normalisation stage. Empirical evidence confirms that ' +
-        'fertiliser and ammonia supply chains — which account for 46% of global urea supply from the Gulf — do not recover ' +
-        'when oil tanker flows resume. Unlike oil, no bypass infrastructure exists for Gulf fertiliser exports; urea prices ' +
-        'rose 50% within weeks of closure and structural recovery timelines are measured in months to years, not days. ' +
-        'The scenario therefore tests whether the market correctly prices this asymmetry: oil recovers with the strait; ' +
-        'fertiliser and industrial commodity supply chains do not. The non-consensus question is whether agents ' +
-        'systematically misprice Materials by treating it as an oil proxy rather than a structurally disrupted supply chain.',
+        'This scenario models two sequential phases of the 2026 Iran–US conflict: the closure of the Strait of Hormuz ' +
+        'and a subsequent partial, negotiated reopening. It is not designed to fully replicate the real-world situation — ' +
+        'the actual path through a partial reopening will be non-linear, driven by geopolitical noise the model does not ' +
+        'capture. What it does show is the types of behavioural patterns and mispricing pressures that tend to emerge ' +
+        'across such a cycle. ' +
+        'Phase 1 — Closure (ticks 40–65): The scenario encodes a sustained supply shock. Energy and Materials receive a ' +
+        'chronic upward repricing — the strait closure is not a temporary spike but a persistent constraint on roughly 20% ' +
+        'of global seaborne oil and significant Gulf-region commodity flows. The broader market is hit by an acute risk-off ' +
+        'shock across rate-sensitive and supply-chain-exposed sectors — the stagflationary backdrop is what motivates this ' +
+        'parameterisation — with partial reversion as markets begin pricing in eventual resolution. ' +
+        'Phase 2 — Partial Reopening (from tick 85): A ceasefire creates conditions for a partial reopening, but the model ' +
+        'encodes this as imperfect and incomplete. The announcement triggers an acute relief rally — beaten sectors recover, ' +
+        'Energy and Materials partially sell off on deal news — but this shock reverts, reflecting deal fragility and a ' +
+        'structural risk premium that does not evaporate at announcement. A separate, slower normalisation then applies to ' +
+        'Energy only: the gradual return of actual supply flows as tanker traffic resumes. Materials is deliberately excluded ' +
+        'from this normalisation, encoding the assumption that fertiliser and industrial commodity supply chains have a ' +
+        'structurally different recovery profile from oil tanker flows — they do not heal when the strait reopens. ' +
+        'Given this shock sequence, which sectors show systematic mispricing pressure relative to the consensus playbook ' +
+        'across the full Monte Carlo distribution? The results may confirm consensus expectations, surface unexpected ' +
+        'divergences, or identify sectors the standard stagflation framing gets structurally wrong.',
       lambdas: [1.50, 2.00, 1.20, 1.20, 1.00, 1.20, 0.80, 0.80, 1.20, 1.80, 2.50],
       nm_intensity: 0.65,
       narrative_half_life: 10,
-      total_ticks: 175,
+      total_ticks: 185,
       num_runs: 50,
       shocks: [
         // ── Phase 1: Closure (ticks 40–65) ─────────────────────────────────────
@@ -495,23 +489,21 @@ const setup = (() => {
         // Acute + both channels: driven by sentiment and narrative as well as fundamentals.
         // Reversion true: markets begin partially pricing in eventual resolution during the closure window.
         { onset: 40, duration: 25, magnitude: -0.12, type: 'acute',   channel: 'both',   reversion: true,  sectors: [2, 3, 4, 6, 7, 8, 10] },
-        // ── Phase 2A: Announcement shock — acute, narrative-driven (ticks 75–90) ──
+        // ── Phase 2A: Announcement shock — acute, narrative-driven (ticks 85–100) ──
         // Energy + Materials: oil price reversal on ceasefire/deal announcement.
-        // -0.10 not full reversal of +0.15: partial reopening, Iran retains gatekeeping role,
-        // naval blockade only partially eased. Reversion true: deal fragility means oil cannot fully reprice.
-        { onset: 75, duration: 15, magnitude: -0.10, type: 'acute',   channel: 'both',   reversion: true,  sectors: [0, 1] },
+        // -0.10 not full reversal of +0.15: partial reopening, deal fragility means oil cannot fully reprice.
+        { onset: 85, duration: 15, magnitude: -0.10, type: 'acute',   channel: 'both',   reversion: true,  sectors: [0, 1] },
         // Risk-on relief rally across beaten sectors. Smaller than closure shock (-0.12):
         // markets have partially adapted (re-routing, strategic reserves); partial deal leaves uncertainty.
         // Both channels: announcement is narrative-driven first, fundamentals follow.
-        { onset: 75, duration: 15, magnitude:  0.08, type: 'acute',   channel: 'both',   reversion: true,  sectors: [2, 3, 4, 6, 7, 8, 10] },
-        // ── Phase 2B: Normalisation — Energy only (ticks 75–125) ──────────────
-        // Energy only: oil tanker flows resume as the strait reopens, insurance recalibrates,
-        // strategic reserve releases slow. Market channel only — fundamental supply return, not narrative.
-        // Materials is excluded: Gulf fertiliser and ammonia supply chains (46% of global urea) have
-        // no bypass infrastructure and do not recover when tanker traffic resumes. Urea prices rose
-        // 50% within weeks and structural recovery is measured in months to years, not ticks.
+        { onset: 85, duration: 15, magnitude:  0.08, type: 'acute',   channel: 'both',   reversion: true,  sectors: [2, 3, 4, 6, 7, 8, 10] },
+        // ── Phase 2B: Normalisation — Energy only (ticks 85–135) ──────────────
+        // Energy only: oil tanker flows resume, insurance recalibrates, strategic reserve releases slow.
+        // Market channel only — fundamental supply return, not narrative.
+        // Materials excluded: fertiliser and industrial commodity supply chains have a structurally
+        // different recovery profile from oil tanker flows and do not heal when the strait reopens.
         // No reversion: the partial supply recovery is structural, not temporary.
-        { onset: 75, duration: 50, magnitude: -0.06, type: 'chronic', channel: 'market', reversion: false, sectors: [0] },
+        { onset: 85, duration: 50, magnitude: -0.06, type: 'chronic', channel: 'market', reversion: false, sectors: [0] },
       ],
     },
   };

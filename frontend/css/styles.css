@@ -1641,7 +1641,7 @@ body.landing-mode #top-nav { display: none; }
   .landing-key-phrase { white-space: normal; }
 
   /* Setup */
-  #scenario-desc { min-height: 80px; }
+  #scenario-desc { min-height: 120px; }
   .setup-container { max-width: 100%; padding: 0; }
   .tab-bar { gap: 0; overflow-x: auto; padding: 0 8px; }
   .tab-btn { font-size: 11px; padding: 10px 10px; white-space: nowrap; }
