@@ -472,7 +472,7 @@ const setup = (() => {
         'Energy only: the gradual return of actual supply flows as tanker traffic resumes. Materials is deliberately excluded ' +
         'from this normalisation, encoding the assumption that fertiliser and industrial commodity supply chains have a ' +
         'structurally different recovery profile from oil tanker flows — they do not heal when the strait reopens.\n\n' +
-        'Given this shock sequence, which sectors show systematic mispricing pressure relative to the consensus playbook ' +
+        'Given this shock sequence, how strongly and consistently do agents price in systematic mispricing pressure across sectors relative to the consensus playbook ' +
         'across the full Monte Carlo distribution? The results may confirm consensus expectations, surface unexpected ' +
         'divergences, or identify sectors the standard stagflation framing gets structurally wrong.',
       lambdas: [1.50, 2.00, 1.20, 1.20, 1.00, 1.20, 0.80, 0.80, 1.20, 1.80, 2.50],
