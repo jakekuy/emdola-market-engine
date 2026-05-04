@@ -459,19 +459,19 @@ const setup = (() => {
         'and a subsequent partial, negotiated reopening. It is not designed to fully replicate the real-world situation — ' +
         'the actual path through a partial reopening will be non-linear, driven by geopolitical noise the model does not ' +
         'capture. What it does show is the types of behavioural patterns and mispricing pressures that tend to emerge ' +
-        'across such a cycle. ' +
+        'across such a cycle.\n\n' +
         'Phase 1 — Closure (ticks 40–65): The scenario encodes a sustained supply shock. Energy and Materials receive a ' +
         'chronic upward repricing — the strait closure is not a temporary spike but a persistent constraint on roughly 20% ' +
         'of global seaborne oil and significant Gulf-region commodity flows. The broader market is hit by an acute risk-off ' +
         'shock across rate-sensitive and supply-chain-exposed sectors — the stagflationary backdrop is what motivates this ' +
-        'parameterisation — with partial reversion as markets begin pricing in eventual resolution. ' +
+        'parameterisation — with partial reversion as markets begin pricing in eventual resolution.\n\n' +
         'Phase 2 — Partial Reopening (from tick 85): A ceasefire creates conditions for a partial reopening, but the model ' +
         'encodes this as imperfect and incomplete. The announcement triggers an acute relief rally — beaten sectors recover, ' +
         'Energy and Materials partially sell off on deal news — but this shock reverts, reflecting deal fragility and a ' +
         'structural risk premium that does not evaporate at announcement. A separate, slower normalisation then applies to ' +
         'Energy only: the gradual return of actual supply flows as tanker traffic resumes. Materials is deliberately excluded ' +
         'from this normalisation, encoding the assumption that fertiliser and industrial commodity supply chains have a ' +
-        'structurally different recovery profile from oil tanker flows — they do not heal when the strait reopens. ' +
+        'structurally different recovery profile from oil tanker flows — they do not heal when the strait reopens.\n\n' +
         'Given this shock sequence, which sectors show systematic mispricing pressure relative to the consensus playbook ' +
         'across the full Monte Carlo distribution? The results may confirm consensus expectations, surface unexpected ' +
         'divergences, or identify sectors the standard stagflation framing gets structurally wrong.',
