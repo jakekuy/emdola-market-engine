@@ -300,7 +300,7 @@ const setup = (() => {
       num_runs: 50,
       shocks: [
         { onset: 40, duration: 25, magnitude:  0.15, type: 'chronic', channel: 'market', reversion: false, sectors: [0, 1] },
-        { onset: 40, duration: 25, magnitude: -0.12, type: 'acute',   channel: 'both',   reversion: true,  sectors: [2, 4, 6, 7, 8, 10] },
+        { onset: 40, duration: 25, magnitude: -0.12, type: 'acute',   channel: 'both',   reversion: true,  sectors: [2, 3, 4, 6, 7, 8, 10] },
       ],
     },
 
