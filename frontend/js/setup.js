@@ -476,7 +476,7 @@ const setup = (() => {
         'across the full Monte Carlo distribution? The results may confirm consensus expectations, surface unexpected ' +
         'divergences, or identify sectors the standard stagflation framing gets structurally wrong.',
       lambdas: [1.50, 2.00, 1.20, 1.20, 1.00, 1.20, 0.80, 0.80, 1.20, 1.80, 2.50],
-      nm_intensity: 0.65,
+      nm_intensity: 0.30,
       narrative_half_life: 21,
       total_ticks: 175,
       num_runs: 50,
