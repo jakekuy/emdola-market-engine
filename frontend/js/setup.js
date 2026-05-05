@@ -294,8 +294,8 @@ const setup = (() => {
         'Inflation expectations re-accelerate; central banks face a stagflationary dilemma. Regional contagion is limited ' +
         'but Middle East sovereign credit spreads widen sharply.',
       lambdas: [1.50, 2.00, 1.20, 1.20, 1.00, 1.20, 0.80, 0.80, 1.20, 1.80, 2.50],
-      nm_intensity: 0.60,
-      narrative_half_life: 7,
+      nm_intensity: 0.30,
+      narrative_half_life: 21,
       total_ticks: 125,
       num_runs: 50,
       shocks: [
@@ -321,7 +321,7 @@ const setup = (() => {
         'This backtest asks: does the model generate a similarly non-consensus sector repricing signal?',
       lambdas: [2.00, 2.00, 1.20, 1.20, 1.00, 1.20, 0.80, 0.80, 1.20, 1.80, 2.50],
       nm_intensity: 0.70,
-      narrative_half_life: 15,
+      narrative_half_life: 21,
       total_ticks: 125,
       num_runs: 50,
       shocks: [
