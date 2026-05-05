@@ -477,7 +477,7 @@ const setup = (() => {
         'divergences, or identify sectors the standard stagflation framing gets structurally wrong.',
       lambdas: [1.50, 2.00, 1.20, 1.20, 1.00, 1.20, 0.80, 0.80, 1.20, 1.80, 2.50],
       nm_intensity: 0.65,
-      narrative_half_life: 10,
+      narrative_half_life: 21,
       total_ticks: 175,
       num_runs: 50,
       shocks: [

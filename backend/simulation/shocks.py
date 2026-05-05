@@ -177,3 +177,16 @@ class ShockProcessor:
         if tick < 0 or tick >= self._total_ticks:
             return False
         return bool(self._active[tick])
+
+    def is_influence_active(self, tick: int) -> bool:
+        """True if the influence channel has a non-zero signal at this tick.
+
+        Distinct from is_active(): a market-only shock (channel='market') marks
+        the tick active for trace/logging purposes but contributes nothing to the
+        influence channel.  The herding amplification check uses this flag so that
+        market-only ticks (e.g. Phase 2B chronic normalisation) are not counted as
+        'shock ticks' when comparing shock-period vs quiet-period volatility.
+        """
+        if tick < 0 or tick >= self._total_ticks:
+            return False
+        return bool(np.any(self._inf_intensities[tick]))

@@ -191,6 +191,7 @@ class SimulationRun:
 
             # Compute shock_active once per tick — used for logging and trace capture.
             shock_active = self._shock_proc.is_active(tick)
+            influence_active = self._shock_proc.is_influence_active(tick)
 
             # Step 3: Per-type tracking accumulators (reset each tick).
             activated: dict[str, int] = {t: 0 for t in AGENT_TYPES}
@@ -259,6 +260,7 @@ class SimulationRun:
                     volatility=env.volatility.tolist(),
                     excess_demand=env.excess_demand.tolist(),
                     shock_active=shock_active,
+                    influence_active=influence_active,
                 ))
                 for atype in AGENT_TYPES:
                     n_active = activated[atype]

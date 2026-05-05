@@ -40,6 +40,7 @@ class TickSnapshot(BaseModel):
     volatility: list[float] = Field(..., description=f"{NUM_SECTORS} rolling σ.")
     excess_demand: list[float] = Field(..., description=f"{NUM_SECTORS} net excess demand.")
     shock_active: bool
+    influence_active: bool = False
 
 
 class TypeActionSummary(BaseModel):

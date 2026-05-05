@@ -142,16 +142,16 @@ def check_herding_amplification(batch_result: BatchResult) -> SanityCheckResult:
         s.volatility
         for r in batch_result.run_results
         for s in r.tick_snapshots
-        if s.shock_active
+        if s.influence_active
     ])
     if len(shock_vols) == 0:
-        return _make_skipped("herding_amplification", "no shock-active ticks detected.")
+        return _make_skipped("herding_amplification", "no influence-active ticks detected.")
 
     quiet_vols = np.array([
         s.volatility
         for r in batch_result.run_results
         for s in r.tick_snapshots
-        if not s.shock_active
+        if not s.influence_active
     ])
     if len(quiet_vols) == 0:
         return _make_skipped("herding_amplification", "no quiet-period ticks for comparison.")
@@ -178,7 +178,7 @@ def check_herding_amplification(batch_result: BatchResult) -> SanityCheckResult:
             f"ratio: {ratio:.2f}×."
         ),
         detail=(
-            f"{len(shock_vols)} shock ticks vs {len(quiet_vols)} quiet ticks "
+            f"{len(shock_vols)} influence-active ticks vs {len(quiet_vols)} quiet ticks "
             f"across {len(batch_result.run_results)} runs."
         ),
     )
