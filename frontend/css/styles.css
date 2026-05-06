@@ -1550,6 +1550,7 @@ body.landing-mode #top-nav { display: none; }
   color: var(--text-1);
   font-size: 13px;
   line-height: 1.5;
+  min-height: 40px;
 }
 
 /* ── Parameter context callouts ───────────────────────────────────────────────── */
