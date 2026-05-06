@@ -188,7 +188,7 @@ body {
 #view-landing,
 #view-setup,
 #view-output,
-#view-profiles { overflow-y: auto; }
+#view-profiles { overflow-y: auto; scrollbar-gutter: stable; }
 #view-runtime { overflow: hidden; }
 
 /* ── App header ─────────────────────────────────────────────────────────────── */
