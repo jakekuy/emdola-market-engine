@@ -234,7 +234,7 @@ const charts = (() => {
           marker: { color: SECTOR_COLORS[si], size: 5, opacity: isShocked ? 0.8 : 0.45 },
           line: { color: SECTOR_COLORS[si], width: isShocked ? 1.5 : 0.8 },
           fillcolor: SECTOR_COLORS[si] + (isShocked ? '33' : '14'),
-          hovertemplate: `<b>${fn}</b>${isShocked ? ' — directly shocked' : ' — coupling / emergent'}<br>%{y:+.1f}%<extra></extra>`,
+          hovertemplate: `<b>${fn}</b>${isShocked ? ', directly shocked' : ', coupling / emergent'}<br>%{y:+.1f}%<extra></extra>`,
           showlegend: false,
         });
       });

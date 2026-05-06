@@ -116,13 +116,13 @@ const app = (() => {
             <button class="btn-secondary" onclick="app.startProfileGeneration()">Regenerate personas</button>
             ${resetBtn}
           </div>
-          <span class="personas-footer-hint">Regenerate fires 8 LLM calls — uses your scenario context to create tailored personas. Defaults are never overwritten.</span>
+          <span class="personas-footer-hint">Regenerate fires 8 LLM calls, uses your scenario context to create tailored personas. Defaults are never overwritten.</span>
         </div>`;
     } else {
       footer.innerHTML = `
         <div class="personas-footer-inner personas-footer-empty">
           <button id="personas-generate-btn" class="btn-gold" onclick="app.startProfileGeneration()">Generate agent personas</button>
-          <span class="personas-footer-hint">Fires 8 LLM calls — uses your scenario name, description, and shocks to create tailored investor personas.</span>
+          <span class="personas-footer-hint">Fires 8 LLM calls, uses your scenario name, description, and shocks to create tailored investor personas.</span>
         </div>`;
     }
   }
@@ -131,23 +131,23 @@ const app = (() => {
 
   const _TAB_COMMS = {
     'tab-profiles': [
-      'Scenarios & Personas tab — generate LLM-calibrated investor personas.',
-      'Set your scenario name and description first, then generate personas. The model uses your scenario context — including any shocks you define — to create realistic personas for each investor type.',
+      'Scenarios & Personas tab, generate LLM-calibrated investor personas.',
+      'Set your scenario name and description first, then generate personas. The model uses your scenario context, including any shocks you define, to create realistic personas for each investor type.',
     ],
     'tab-market': [
-      'Market tab — set price sensitivity and signal strength.',
+      'Market tab, set price sensitivity and signal strength.',
       'Configure how strongly each sector responds to buying and selling pressure, and how much background news and sentiment affects the market.',
     ],
     'tab-shocks': [
-      'Shocks tab — define events or trends that disrupt the market.',
+      'Shocks tab, define events or trends that disrupt the market.',
       'Shocks are included in the context passed to the model when generating personas, so defining them first produces more scenario-relevant personas.',
     ],
     'tab-agents': [
-      'Agents tab — adjust the investor population.',
+      'Agents tab, adjust the investor population.',
       'Override the number of agents or capital base per investor type. Leave blank to use realistic defaults (30 agents each).',
     ],
     'tab-run': [
-      'Run tab — set simulation parameters, then launch.',
+      'Run tab, set simulation parameters, then launch.',
       'Choose simulation duration and number of Monte Carlo runs. Each run draws a different combination of agent personas. More runs give more robust distributional results.',
     ],
   };
@@ -263,7 +263,7 @@ const app = (() => {
     window.parent.postMessage('emdola:run_started', '*');
     // Only update comms if we're not mid-simulation (mid-sim comms are managed by WS events).
     if (!_simRunning) {
-      _setComms('info', 'Live view — simulation has completed.', 'Navigate to Results to see the full output.');
+      _setComms('info', 'Live view, simulation has completed.', 'Navigate to Results to see the full output.');
     }
   }
 
@@ -292,7 +292,7 @@ const app = (() => {
       profiles.init(profileData);
       const label = source === 'default' ? 'Preloaded personas active' : 'Custom personas loaded';
       _setComms('success',
-        `${label} — 24 personas ready.`,
+        `${label}, 24 personas ready.`,
         'Review them in the Personas tab, configure the remaining tabs as needed, then click "Run simulation →".'
       );
     } catch (err) {
@@ -325,7 +325,7 @@ const app = (() => {
       const savedMeta = await api.getSavedProfilesMeta();
       _renderPersonasFooter(savedMeta);
       _setComms('error',
-        'Persona generation failed — reverted to default personas.',
+        'Persona generation failed, reverted to default personas.',
         errorMsg + ' Default validated agents are loaded and ready to use.'
       );
     } catch (_) {
@@ -361,7 +361,7 @@ const app = (() => {
         _profileGenTypesComplete = data.step;
         const label = TYPE_LABELS_FULL[data.agent_type] || data.agent_type;
         const next  = data.step < data.total ? _nextTypeLabel(data.agent_type) : null;
-        const primary = `Generating personas — ${data.step} of ${data.total} complete · Finished: ${label}${next ? ` · Up next: ${next}` : ' · Finalising…'}`;
+        const primary = `Generating personas, ${data.step} of ${data.total} complete · Finished: ${label}${next ? ` · Up next: ${next}` : ' · Finalising…'}`;
         const msgEl = document.getElementById('comms-message');
         if (msgEl) msgEl.textContent = primary;
         break;
@@ -386,7 +386,7 @@ const app = (() => {
       case 'error':
         _stopProfileTimer();
         if (_wsHandle) { _wsHandle.close(); _wsHandle = null; }
-        _revertToDefaultsAfterError('The API call failed — this may indicate insufficient API credits or a configuration issue.');
+        _revertToDefaultsAfterError('The API call failed, this may indicate insufficient API credits or a configuration issue.');
         break;
 
       default:
@@ -517,7 +517,7 @@ const app = (() => {
       case 'batch_processing':
         _setComms('loading', data.message || 'Processing…',
           data.message?.includes('analysis')
-            ? 'Generating investment narrative from simulation output — this takes 1–3 minutes.'
+            ? 'Generating investment narrative from simulation output, this takes 1–3 minutes.'
             : 'Aggregating results across all runs.');
         break;
 
@@ -526,7 +526,7 @@ const app = (() => {
         _isPaused = false;
         const pb = document.getElementById('rt-pause-btn');
         if (pb) { pb.textContent = '⏸ Pause'; pb.classList.remove('paused'); pb.disabled = true; }
-        _setComms('loading', 'Analysis complete — loading results…', '');
+        _setComms('loading', 'Analysis complete, loading results…', '');
         _fetchAndShowResults(_currentBatchId);
         break;
       }
@@ -554,12 +554,12 @@ const app = (() => {
           _fetchAndShowResults(batchId);
         } else {
           _setComms('error',
-            'Connection lost — simulation may still be running.',
+            'Connection lost, simulation may still be running.',
             'Refresh the page to start a new run.');
         }
       } catch (_) {
         _setComms('error',
-          'Connection lost — simulation may still be running.',
+          'Connection lost, simulation may still be running.',
           'Refresh the page to start a new run.');
       }
     }, 1000);
@@ -619,16 +619,16 @@ const app = (() => {
       const isDefault = savedMeta.source === 'default';
       _setComms('info',
         isDefault
-          ? 'Preloaded agents active — ready to run.'
+          ? 'Preloaded agents active, ready to run.'
           : 'Custom personas available from your last scenario.',
         isDefault
           ? 'Select a preset, configure the remaining tabs, then click "Run simulation →". Regenerate at any time for scenario-specific personas.'
-          : `"${savedMeta.scenario_name}" — use them or regenerate after updating your scenario. Configure the remaining tabs, then click "Run simulation →".`
+          : `"${savedMeta.scenario_name}", use them or regenerate after updating your scenario. Configure the remaining tabs, then click "Run simulation →".`
       );
     } else {
       _setComms('info',
         'Configure your scenario, generate agent personas, then run the simulation.',
-        'Use the 5 tabs above. You can set calibration parameters before or after generating personas — the model uses your scenario context when creating personas.'
+        'Use the 5 tabs above. You can set calibration parameters before or after generating personas, the model uses your scenario context when creating personas.'
       );
     }
   }

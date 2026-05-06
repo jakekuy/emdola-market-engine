@@ -18,14 +18,14 @@ const setup = (() => {
     I1:'Asset manager',  I2:'Hedge fund',           I3:'Pension fund', I4:'Sovereign wealth',
   };
   const TYPE_DESCRIPTIONS = {
-    R1: 'Long-term passive investors — pension savers and index fund holders who rarely trade.',
-    R2: 'Active platform traders — self-directed retail investors monitoring markets daily.',
+    R1: 'Long-term passive investors, pension savers and index fund holders who rarely trade.',
+    R2: 'Active platform traders, self-directed retail investors monitoring markets daily.',
     R3: 'Sophisticated high-net-worth investors with regular professional portfolio review.',
-    R4: 'Momentum-driven speculators — high-frequency monitoring, concentrated positions.',
+    R4: 'Momentum-driven speculators, high-frequency monitoring, concentrated positions.',
     I1: 'Long-only institutional asset managers running benchmark-relative daily processes.',
-    I2: 'Hedge funds — opportunistic, high-conviction, concentrated across sectors.',
-    I3: 'Pension funds and insurance companies — liability-driven, conservative equity allocation.',
-    I4: 'Sovereign wealth funds — very large capital base, long time horizons, diversified mandates.',
+    I2: 'Hedge funds, opportunistic, high-conviction, concentrated across sectors.',
+    I3: 'Pension funds and insurance companies, liability-driven, conservative equity allocation.',
+    I4: 'Sovereign wealth funds, very large capital base, long time horizons, diversified mandates.',
   };
   const DEFAULT_AUM = { R1:500, R2:133, R3:133, R4:50, I1:2667, I2:100, I3:583, I4:121 };
 
@@ -34,19 +34,19 @@ const setup = (() => {
   // ── Plain-language context helpers ────────────────────────────────────────────
 
   function _lambdaLabel(val) {
-    if (val <= 0.08) return 'Very liquid — prices change little even on large trades';
-    if (val <= 0.11) return 'Liquid — gradual price response to buying/selling pressure';
-    if (val <= 0.14) return 'Moderate — balanced price sensitivity';
-    if (val <= 0.19) return 'Responsive — meaningful price moves on moderate activity';
-    return 'Illiquid — prices can shift sharply on relatively small volumes';
+    if (val <= 0.08) return 'Very liquid, prices change little even on large trades';
+    if (val <= 0.11) return 'Liquid, gradual price response to buying/selling pressure';
+    if (val <= 0.14) return 'Moderate, balanced price sensitivity';
+    if (val <= 0.19) return 'Responsive, meaningful price moves on moderate activity';
+    return 'Illiquid, prices can shift sharply on relatively small volumes';
   }
 
   function _nmLabel(val) {
-    if (val <= 0.05) return 'Off — price moves driven by agent behaviour only, no external signals';
-    if (val <= 0.20) return 'Low — faint background noise from news and commentary';
-    if (val <= 0.45) return 'Moderate — normal level of market commentary and analyst activity';
-    if (val <= 0.70) return 'High — active media coverage strongly influences agent signals';
-    return 'Very high — sentiment and narrative dominate over fundamentals';
+    if (val <= 0.05) return 'Off, price moves driven by agent behaviour only, no external signals';
+    if (val <= 0.20) return 'Low, faint background noise from news and commentary';
+    if (val <= 0.45) return 'Moderate, normal level of market commentary and analyst activity';
+    if (val <= 0.70) return 'High, active media coverage strongly influences agent signals';
+    return 'Very high, sentiment and narrative dominate over fundamentals';
   }
 
   function _updateLambdaCtx(sector) {
@@ -122,7 +122,7 @@ const setup = (() => {
             <div class="field-group">
               <label>Force agent count</label>
               <input id="agent-count-${type}" type="number" min="10" max="200" step="10" placeholder="Auto" />
-              <span class="hint">Leave blank to let the model vary this type's count across runs. Enter a value (10–200) to fix it exactly — this disables auto-distribution for all types.</span>
+              <span class="hint">Leave blank to let the model vary this type's count across runs. Enter a value (10–200) to fix it exactly, this disables auto-distribution for all types.</span>
             </div>
             <div class="field-group">
               <label>Total capital (billions USD)</label>
@@ -161,14 +161,14 @@ const setup = (() => {
         </div>
         <div class="field-row">
           <div class="field-group">
-            <label>Magnitude <span class="hint">(positive = upward price pressure, negative = downward — 0.10 = 10% impact)</span></label>
+            <label>Magnitude <span class="hint">(positive = upward price pressure, negative = downward, 0.10 = 10% impact)</span></label>
             <input id="shock-magnitude-${id}" type="number" step="0.01" value="0.15" />
           </div>
           <div class="field-group">
             <label>Type</label>
             <select id="shock-type-${id}">
-              <option value="acute">Acute — sudden repricing event</option>
-              <option value="chronic">Chronic — slow-building trend, holds permanently</option>
+              <option value="acute">Acute, sudden repricing event</option>
+              <option value="chronic">Chronic, slow-building trend, holds permanently</option>
             </select>
           </div>
         </div>
@@ -182,10 +182,10 @@ const setup = (() => {
             </select>
           </div>
           <div class="field-group">
-            <label>Fair value reverts? <span class="hint">(acute only — actual prices are emergent)</span></label>
+            <label>Fair value reverts? <span class="hint">(acute only, actual prices are emergent)</span></label>
             <select id="shock-reversion-${id}">
-              <option value="false">No — repricing is permanent</option>
-              <option value="true">Yes — reverts over duration window</option>
+              <option value="false">No, repricing is permanent</option>
+              <option value="true">Yes, reverts over duration window</option>
             </select>
           </div>
         </div>
@@ -308,9 +308,9 @@ const setup = (() => {
       scenario_name: 'Russia–Ukraine Invasion — Multi-Commodity Shock (2022 Backtest)',
       scenario_description:
         'Russia\'s invasion of Ukraine on 24 February 2022 triggered the largest European land war since 1945 ' +
-        'and a simultaneous multi-commodity supply shock not seen since the 1970s. Russia — supplying ~40% of European ' +
-        'piped gas and ~12% of global oil — began weaponising energy exports within weeks of the invasion. Ukraine — ' +
-        'the world\'s fourth-largest wheat exporter and a major producer of sunflower oil and ammonia-based fertilisers — ' +
+        'and a simultaneous multi-commodity supply shock not seen since the 1970s. Russia, supplying ~40% of European ' +
+        'piped gas and ~12% of global oil, began weaponising energy exports within weeks of the invasion. Ukraine, ' +
+        'the world\'s fourth-largest wheat exporter and a major producer of sunflower oil and ammonia-based fertilisers, ' +
         'had its agricultural exports and Black Sea port operations disrupted almost immediately. ' +
         'Brent crude rose from $95/bbl to $130/bbl before partial stabilisation. European TTF gas reached 10× its 5-year average. ' +
         'Wheat futures rose ~50% at peak; fertiliser prices rose ~70%. ' +
@@ -345,11 +345,11 @@ const setup = (() => {
         'with full implementation in 24 months and immediate activation of a Carbon Border Adjustment Mechanism on EU imports. ' +
         'The announcement significantly exceeds all prior policy expectations. The EU ETS had been trading around $60–70/tonne; ' +
         'a $100/tonne floor represents a ~50% step-change in the marginal cost signal for carbon-intensive industries. ' +
-        'The standard ESG trade — long clean energy and utilities, short fossil fuels — is immediately initiated by institutional allocators. ' +
+        'The standard ESG trade, long clean energy and utilities, short fossil fuels, is immediately initiated by institutional allocators. ' +
         'But the actual repricing is likely more complex: energy majors\' stranded asset discount is partly offset by near-term ' +
         'commodity price increases as carbon costs raise production costs and constrict supply; heavy industry (steel, cement, chemicals) ' +
         'faces structural margin compression; utilities pivoting to renewables see structural re-rating while legacy coal operators face write-downs; ' +
-        'and the green capital markets boom — green bond issuance, carbon trading desks, sustainability-linked lending — ' +
+        'and the green capital markets boom, green bond issuance, carbon trading desks, sustainability-linked lending, ' +
         'creates an unexpected tailwind for capital markets-exposed financial institutions. ' +
         'Consumer sectors face a persistent energy input cost squeeze from higher production energy costs, agricultural energy use, and logistics. ' +
         'The question for the model: beyond the obvious ESG trade, where does behavioural repricing diverge from consensus allocation?',
@@ -377,7 +377,7 @@ const setup = (() => {
     oil_crash_2016: {
       scenario_name: 'Oil Price Collapse — Oversupply Shock (2015–16 Backtest)',
       scenario_description:
-        'Between June 2014 and January 2016, Brent crude collapsed from $115/bbl to $27/bbl — a 76% decline driven by ' +
+        'Between June 2014 and January 2016, Brent crude collapsed from $115/bbl to $27/bbl, a 76% decline driven by ' +
         'Saudi Arabia\'s decision to defend market share rather than cut production, a US shale revolution that had added ' +
         '4 million barrels/day of new supply since 2010, and a sharp slowdown in Chinese industrial demand. ' +
         'OPEC refused to blink at its November 2014 meeting, cementing the view that oversupply would persist. ' +
@@ -385,7 +385,7 @@ const setup = (() => {
         'mean lower consumer costs, lower input prices across industry, and a net transfer from producers to consumers. ' +
         '"Cheap oil is a tax cut" was the consensus framing. In practice, the outcomes diverged sharply from this narrative. ' +
         'Energy sector equities fell 50–60%, destroying more market cap than the consumer sector gained. ' +
-        'High-yield credit markets — with heavy energy sector loan and bond exposure — experienced near-systemic stress: ' +
+        'High-yield credit markets, with heavy energy sector loan and bond exposure, experienced near-systemic stress: ' +
         'spreads on HY energy bonds widened to 1,700bps by early 2016, dragging down financial sector sentiment. ' +
         'The expected consumer discretionary windfall from cheap petrol never materialised in spending data. ' +
         'Materials companies exposed to industrial metals (copper, iron ore) also fell as the China slowdown that triggered ' +
@@ -419,12 +419,12 @@ const setup = (() => {
         'A prolonged extreme heat event triggers mandatory power rationing across a major semiconductor and agricultural ' +
         'producing region. Fab operations curtail by 30–40% for eight weeks; automotive parts and apparel manufacturing ' +
         'suspends operations. ' +
-        'This is not a demand shock. Consumer spending is unaffected. It is a physical supply-side disruption — ' +
+        'This is not a demand shock. Consumer spending is unaffected. It is a physical supply-side disruption, ' +
         'the kind that classical economics and most portfolio models treat as a temporary, mean-reverting disruption to be ignored. ' +
         'The consensus reaction is calm: supply chains are resilient, inventories will buffer, this will be forgotten in a quarter. ' +
         'The non-consensus case is more interesting. Semiconductor lead times extend from 12 weeks to 40+ weeks, ' +
-        'creating a downstream ripple across every industry that embeds chips — automotive, industrial equipment, medical devices, ' +
-        'consumer electronics — that takes 12–18 months to clear. The heat event itself lasts 8 weeks; its supply chain consequences ' +
+        'creating a downstream ripple across every industry that embeds chips, automotive, industrial equipment, medical devices, ' +
+        'consumer electronics, that takes 12–18 months to clear. The heat event itself lasts 8 weeks; its supply chain consequences ' +
         'persist for several quarters. Agricultural heat stress hits consumer staples supply chains in ways that are not priced ' +
         'because physical crop disruption is not a standard institutional risk scenario. ' +
         'Energy demand for cooling spikes sharply but briefly. ' +
@@ -456,22 +456,22 @@ const setup = (() => {
       scenario_name: 'Iran Conflict — Hormuz Partial Reopening (Two-Phase)',
       scenario_description:
         'This scenario models two sequential phases of the 2026 Iran–US conflict: the closure of the Strait of Hormuz ' +
-        'and a subsequent partial, negotiated reopening. It is not designed to fully replicate the real-world situation — ' +
+        'and a subsequent partial, negotiated reopening. It is not designed to fully replicate the real-world situation, ' +
         'the actual path through a partial reopening will be non-linear, driven by geopolitical noise the model does not ' +
         'capture. What it does show is the types of behavioural patterns and mispricing pressures that tend to emerge ' +
         'across such a cycle.\n\n' +
-        'Phase 1 — Closure (ticks 40–65): The scenario encodes a sustained supply shock. Energy and Materials receive a ' +
-        'chronic upward repricing — the strait closure is not a temporary spike but a persistent constraint on roughly 20% ' +
+        'Phase 1, Closure (ticks 40–65): The scenario encodes a sustained supply shock. Energy and Materials receive a ' +
+        'chronic upward repricing, the strait closure is not a temporary spike but a persistent constraint on roughly 20% ' +
         'of global seaborne oil and significant Gulf-region commodity flows. The broader market is hit by an acute risk-off ' +
-        'shock across rate-sensitive and supply-chain-exposed sectors — the stagflationary backdrop is what motivates this ' +
-        'parameterisation — with partial reversion as markets begin pricing in eventual resolution.\n\n' +
-        'Phase 2 — Partial Reopening (from tick 85): A ceasefire creates conditions for a partial reopening, but the model ' +
-        'encodes this as imperfect and incomplete. The announcement triggers an acute relief rally — beaten sectors recover, ' +
-        'Energy and Materials partially sell off on deal news — but this shock reverts, reflecting deal fragility and a ' +
+        'shock across rate-sensitive and supply-chain-exposed sectors, the stagflationary backdrop is what motivates this ' +
+        'parameterisation, with partial reversion as markets begin pricing in eventual resolution.\n\n' +
+        'Phase 2, Partial Reopening (from tick 85): A ceasefire creates conditions for a partial reopening, but the model ' +
+        'encodes this as imperfect and incomplete. The announcement triggers an acute relief rally, beaten sectors recover, ' +
+        'Energy and Materials partially sell off on deal news, but this shock reverts, reflecting deal fragility and a ' +
         'structural risk premium that does not evaporate at announcement. A separate, slower normalisation then applies to ' +
         'Energy only: the gradual return of actual supply flows as tanker traffic resumes. Materials is deliberately excluded ' +
         'from this normalisation, encoding the assumption that fertiliser and industrial commodity supply chains have a ' +
-        'structurally different recovery profile from oil tanker flows — they do not heal when the strait reopens.\n\n' +
+        'structurally different recovery profile from oil tanker flows, they do not heal when the strait reopens.\n\n' +
         'Given this shock sequence, how strongly and consistently do agents price in systematic mispricing pressure across sectors relative to the consensus playbook ' +
         'across the full Monte Carlo distribution? The results may confirm consensus expectations, surface unexpected ' +
         'divergences, or identify sectors the standard stagflation framing gets structurally wrong.',
@@ -545,7 +545,7 @@ const setup = (() => {
     const shockBanner = document.getElementById('preset-shock-banner');
     if (shockBanner) { shockBanner.style.display = 'none'; shockBanner.innerHTML = ''; }
     const shocksDefaultsText = document.getElementById('shocks-defaults-text');
-    if (shocksDefaultsText) shocksDefaultsText.textContent = 'No shocks configured — select a preset or add shocks manually.';
+    if (shocksDefaultsText) shocksDefaultsText.textContent = 'No shocks configured, select a preset or add shocks manually.';
 
     // Run tab — reset to defaults
     const ticksEl = document.getElementById('total-ticks');
@@ -578,7 +578,7 @@ const setup = (() => {
     // Shocks tab — show preset banner, update defaults bar, auto-open panel
     const shockBanner = document.getElementById('preset-shock-banner');
     if (shockBanner) {
-      shockBanner.innerHTML = `<strong style="color:var(--text-1)">Preloaded shock calibration for: ${p.scenario_name}</strong> — these shocks reflect the scenario design. You can adjust individual parameters or add further shocks below.`;
+      shockBanner.innerHTML = `<strong style="color:var(--text-1)">Preloaded shock calibration for: ${p.scenario_name}</strong>, these shocks reflect the scenario design. You can adjust individual parameters or add further shocks below.`;
       shockBanner.style.display = 'block';
     }
     const shocksDefaultsText = document.getElementById('shocks-defaults-text');

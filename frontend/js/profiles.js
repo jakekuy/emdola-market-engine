@@ -17,14 +17,14 @@ const profiles = (() => {
     I3:'Pension fund',          I4:'Sovereign wealth',
   };
   const TYPE_DESCRIPTIONS = {
-    R1: 'Long-term passive investors — pension savers and index fund holders who rarely trade.',
-    R2: 'Active platform traders — self-directed retail investors monitoring markets daily.',
+    R1: 'Long-term passive investors, pension savers and index fund holders who rarely trade.',
+    R2: 'Active platform traders, self-directed retail investors monitoring markets daily.',
     R3: 'Sophisticated high-net-worth investors with regular professional portfolio review.',
-    R4: 'Momentum-driven speculators — high-frequency monitoring, concentrated positions.',
+    R4: 'Momentum-driven speculators, high-frequency monitoring, concentrated positions.',
     I1: 'Long-only institutional asset managers running benchmark-relative daily processes.',
-    I2: 'Hedge funds — opportunistic, high-conviction, concentrated across sectors.',
-    I3: 'Pension funds and insurance companies — liability-driven, conservative equity allocation.',
-    I4: 'Sovereign wealth funds — very large capital base, long time horizons, diversified mandates.',
+    I2: 'Hedge funds, opportunistic, high-conviction, concentrated across sectors.',
+    I3: 'Pension funds and insurance companies, liability-driven, conservative equity allocation.',
+    I4: 'Sovereign wealth funds, very large capital base, long time horizons, diversified mandates.',
   };
 
   // All 21 characteristics in display order, grouped by category.
@@ -120,7 +120,7 @@ const profiles = (() => {
     banner.id = 'modal-dist-banner';
     banner.className = 'modal-dist-banner';
     banner.innerHTML = `
-      <span class="dist-banner-label">Active persona split — ${runLabel}</span>
+      <span class="dist-banner-label">Active persona split, ${runLabel}</span>
       <div class="dist-banner-bars">
         ${['A','B','C'].map((letter, i) => {
           const count = [distribution.a, distribution.b, distribution.c][i] || 0;

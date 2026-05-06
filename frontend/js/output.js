@@ -200,7 +200,7 @@ const output = (() => {
       const avgMispricing = r.final_mispricing
         ? (r.final_mispricing.reduce((a, b) => a + Math.abs(b), 0) / r.final_mispricing.length * 100).toFixed(1)
         : '?';
-      return `<option value="${r.run_number}">Run ${r.run_number} — seed ${r.seed_record?.numpy_seed ?? '?'} — avg mispricing ${avgMispricing}%</option>`;
+      return `<option value="${r.run_number}">Run ${r.run_number}, seed ${r.seed_record?.numpy_seed ?? '?'}, avg mispricing ${avgMispricing}%</option>`;
     }).join('');
     el.innerHTML = `
       <div style="display:flex;gap:8px;align-items:center">
@@ -250,9 +250,9 @@ const output = (() => {
 
     const TAG_TOOLTIPS = {
       SHOCK:    'Traded in a directly shocked sector during the shock window',
-      COUPLING: 'Traded in an unshocked sector during the shock window — macro sentiment spillover',
-      REVERSAL: 'Reversed direction in this sector vs. prior trade — conviction shift',
-      DISSENT:  'Traded against own type\'s net direction this tick — contrarian signal',
+      COUPLING: 'Traded in an unshocked sector during the shock window, macro sentiment spillover',
+      REVERSAL: 'Reversed direction in this sector vs. prior trade, conviction shift',
+      DISSENT:  'Traded against own type\'s net direction this tick, contrarian signal',
     };
 
     // Build flat list of trade rows with tags; store data in closure array.
